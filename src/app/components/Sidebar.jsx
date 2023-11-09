@@ -10,7 +10,7 @@ import {
 
 export default function Sidebar() {
   return (
-    <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed">
+    <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed ml-3">
       <div className="hidden xl:flex font-semibold p-3 hoverEffect">
         <p>Natano</p>
         <p className="text-blue-700">Diary</p>
