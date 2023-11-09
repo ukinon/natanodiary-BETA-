@@ -21,7 +21,7 @@ export default function Sidebar() {
         <p className="text-blue-700">D</p>
       </div>
 
-      <div className="mt-4 mb-2 xl:items-start">
+      <div className="mt-2 mb-2 xl:items-start">
         <SidebarMenu text="Home" Icon={HomeIcon} active />
         <SidebarMenu text="Notifications" Icon={BellIcon} />
         <SidebarMenu text="Messages" Icon={InboxIcon} />
@@ -38,7 +38,7 @@ export default function Sidebar() {
           src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
           alt="user"
         />
-        <div className="leading-5 hidden xl:inline">
+        <div className="leading-5 hidden xl:inline text-sm">
           <h4 className="font-bold">Arfiano Jordhy</h4>
           <p>@ukinoshitty</p>
         </div>
