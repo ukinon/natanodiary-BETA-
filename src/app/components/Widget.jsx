@@ -1,9 +1,10 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import GalleryWidget from "./GalleryWidget";
 
 export default function Widget() {
   return (
-    <div className="xl:w-[600px] hidden lg:inline ml-10">
-      <div className="w-[90%] xl:w-[80%] sticky top-0 bg-white z-50 py-1.5">
+    <div className="xl:w-[600px] hidden lg:inline ml-8 space-y-8">
+      <div className="w-[90%] sticky top-0 bg-white z-50 py-1.5">
         <div className="flex items-center p-3 rounded-full bg-gray-200 relative">
           <MagnifyingGlassIcon className="h-5 z-50 text-gray-500" />
           <input
@@ -13,6 +14,8 @@ export default function Widget() {
           />
         </div>
       </div>
+
+      <GalleryWidget />
     </div>
   );
 }

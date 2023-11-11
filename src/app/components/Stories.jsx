@@ -8,7 +8,7 @@ import {
 
 export default function Stories({ post }) {
   return (
-    <div className="flex items-center gap-2 mb-3 border-b-2">
+    <div className="flex gap-2 mb-3 border-b-2 p-3">
       <img src={post.userImg} alt="user" className="h-10 " />
       <div className="flex flex-col w-full">
         <div className=" flex justify-between ">
