@@ -60,7 +60,8 @@ export default function CommentsModal() {
     setInput("");
     setSelectedFile(null);
     setIsLoading(false);
-    router.push(`posts/${postID}`);
+    setOpen(false);
+    router.push(`/posts/${postID}`);
   }
 
   const addImageToPost = (e) => {
