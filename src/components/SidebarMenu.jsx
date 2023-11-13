@@ -1,3 +1,5 @@
+"use client";
+
 export default function SidebarMenu({ text, Icon, active }) {
   return (
     <div className="hoverEffect flex items-center space-x-3 justify-center xl:justify-start">

@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "../components/SessionProvider";
 import { getServerSession } from "next-auth";
+import RecoilRootWrapper from "@/components/RecoilRootWrapper";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 export const metadata = {
@@ -13,7 +14,9 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <SessionProvider session={session}> {children} </SessionProvider>
+        <SessionProvider session={session}>
+          <RecoilRootWrapper>{children}</RecoilRootWrapper>
+        </SessionProvider>
       </body>
     </html>
   );

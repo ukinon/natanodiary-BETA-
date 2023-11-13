@@ -38,7 +38,7 @@ export default function Feed() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Stories post={post} />;
+            <Stories post={post} />
           </motion.div>
         ))}
       </AnimatePresence>

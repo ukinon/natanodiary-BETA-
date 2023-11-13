@@ -18,16 +18,27 @@ import Moment from "react-moment";
 import { db, storage } from "../../firebase";
 import { useEffect, useState } from "react";
 import { deleteObject, getMetadata, ref } from "firebase/storage";
+import { useRecoilState } from "recoil";
+import { modalState, postIDState } from "@/atom/modalAtom";
 
 export default function Stories({ post }) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postID, setPostID] = useRecoilState(postIDState);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, "stories", post.id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
+    );
+  }, [db]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "stories", post.id, "comments"),
+      (snapshot) => setComments(snapshot.docs)
     );
   }, [db]);
 
@@ -60,7 +71,7 @@ export default function Stories({ post }) {
   }
 
   return (
-    <div className="flex gap-2 mb-3 border-b-2 p-3">
+    <div className="flex gap-2 mb-3 border-b-2 p-3 whitespace-break-spaces">
       <img src={post.data().userImg} alt="user" className="h-10 rounded-full" />
       <div className="flex flex-col w-full">
         <div className=" flex justify-between ">
@@ -87,7 +98,21 @@ export default function Stories({ post }) {
           <img src={post.data().image} alt="" className="max-w-sm rounded-xl" />
         </div>
         <div className="flex flex-row ">
-          <ChatBubbleOvalLeftEllipsisIcon className="h-9 hoverEffect" />
+          <div className="flex flex-row gap-1 items-center">
+            <ChatBubbleOvalLeftEllipsisIcon
+              className="h-9 hoverEffect"
+              onClick={() => {
+                if (!session) {
+                  signIn();
+                }
+                setPostID(post.id);
+                setOpen(!open);
+              }}
+            />
+            {comments.length > 0 && (
+              <span className="text-sm -ml-2">{comments.length}</span>
+            )}
+          </div>
           <div className="flex flex-row gap-1 items-center">
             {hasLiked ? (
               <SolidHeartIcon

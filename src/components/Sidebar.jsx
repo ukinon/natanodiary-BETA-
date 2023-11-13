@@ -53,13 +53,7 @@ export default function Sidebar() {
             <EllipsisHorizontalIcon className="h-5 xl:ml-8 hidden xl:inline" />
           </>
         ) : (
-          <div className="flex items-center gap-2 justify-center w-full">
-            <img
-              src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
-              alt=""
-            />
-            <SignInButton />
-          </div>
+          <SignInButton />
         )}
       </div>
     </div>

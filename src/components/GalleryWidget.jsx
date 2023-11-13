@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
