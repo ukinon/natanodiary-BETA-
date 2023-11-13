@@ -30,6 +30,7 @@ export default function Post() {
       timestamp: serverTimestamp(),
       name: session?.user?.name,
       username: session?.user?.username,
+      userId: session?.user.uid,
     });
     const imageRef = ref(storage, `stories/${docRef.id}/image`);
     if (selectedFile) {

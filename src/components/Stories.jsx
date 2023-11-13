@@ -1,9 +1,9 @@
 "use client";
 
-import { TrashIcon } from "@heroicons/react/20/solid";
 import {
   ChatBubbleOvalLeftEllipsisIcon,
   HeartIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import {
@@ -15,8 +15,9 @@ import {
 } from "firebase/firestore";
 import { signIn, useSession } from "next-auth/react";
 import Moment from "react-moment";
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
 import { useEffect, useState } from "react";
+import { deleteObject, getMetadata, ref } from "firebase/storage";
 
 export default function Stories({ post }) {
   const { data: session } = useSession();
@@ -24,7 +25,7 @@ export default function Stories({ post }) {
   const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
-    const unsubscribet = onSnapshot(
+    const unsubscribe = onSnapshot(
       collection(db, "stories", post.id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
@@ -40,9 +41,7 @@ export default function Stories({ post }) {
     if (session) {
       const docRef = doc(db, "stories", post.id, "likes", session?.user.uid);
       if (hasLiked) {
-        console.log("Before deleteDoc");
         await deleteDoc(docRef);
-        console.log("After deleteDoc");
       } else {
         await setDoc(docRef, {
           username: session.user.username,
@@ -50,6 +49,13 @@ export default function Stories({ post }) {
       }
     } else {
       signIn();
+    }
+  }
+
+  async function deletePost() {
+    await deleteDoc(doc(db, "stories", post.id));
+    if (post.data().image) {
+      await deleteObject(ref(storage, `stories/${post.id}/image`));
     }
   }
 
@@ -67,8 +73,14 @@ export default function Stories({ post }) {
               <Moment fromNow>{post.data().timestamp?.toDate()}</Moment>
             </span>
           </div>
-
-          <TrashIcon className="hoverEffect h-8" />
+          {session?.user.uid === post.data().userId ? (
+            <TrashIcon
+              className="hoverEffect h-8 hover:text-red-800"
+              onClick={deletePost}
+            />
+          ) : (
+            ""
+          )}
         </div>
         <div className="flex flex-col gap-3">
           <h3 className="text-sm">{post.data().text}</h3>
