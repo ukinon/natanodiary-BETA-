@@ -57,66 +57,69 @@ export default function Post() {
   };
 
   return (
-    <div className="flex m-3 gap-2 border-b-2">
-      <img
-        src={session?.user?.image}
-        alt="user"
-        className="h-10 rounded-full"
-      />
-      <div className="w-full ">
-        <div>
-          <textarea
-            rows="2"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Tell our story today"
-            className="w-full focus:decoration-current sm:h-28 h-20 resize-none outline-none focus:border-b-2 p-2"
-          ></textarea>
+    session && (
+      <div className="flex m-3 gap-2 border-b-2">
+        <img
+          src={session?.user?.image}
+          alt="user"
+          className="h-10 rounded-full"
+        />
+        <div className="w-full ">
+          <div>
+            <textarea
+              rows="2"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Tell our story today"
+              className="w-full focus:decoration-current sm:h-28 h-20 resize-none outline-none focus:border-b-2 p-2"
+            ></textarea>
 
-          {selectedFile && (
-            <div className="mb-3">
-              <XMarkIcon
-                className="h-7 text-black absolute cursor-pointer"
-                onClick={() => setSelectedFile(null)}
-              />
-              <img
-                src={selectedFile}
-                alt=""
-                className={`${isLoading && "animate-pulse"}`}
-              />
+            {selectedFile && (
+              <div className="mb-3">
+                <XMarkIcon
+                  className="h-7 text-black absolute cursor-pointer"
+                  onClick={() => setSelectedFile(null)}
+                />
+                <img
+                  src={selectedFile}
+                  alt=""
+                  className={`${isLoading && "animate-pulse"}`}
+                />
+              </div>
+            )}
+          </div>
+          {!isLoading && (
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex gap-3">
+                <div
+                  className="hoverEffect"
+                  onClick={() => imagePickerRef.current.click()}
+                >
+                  <PhotoIcon className="h-5 w-5 text-blue-500" />
+                  <input
+                    type="file"
+                    hidden
+                    ref={imagePickerRef}
+                    onChange={addImageToPost}
+                    accept="image/png, image/gif, image/jpeg"
+                  />
+                </div>
+                <label htmlFor="" className="hoverEffect">
+                  <FaceSmileIcon className="h-5 w-5  text-blue-500" />
+                </label>
+              </div>
+
+              <button
+                disabled={!input.trim()}
+                className="bg-blue-500 rounded-full p-3 text-white text-sm font-bold disabled:opacity-75 w-1/6 hover:brightness-75"
+                onClick={sendPost}
+              >
+                Post
+              </button>
             </div>
           )}
         </div>
-        {!isLoading && (
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex gap-3">
-              <div
-                className="hoverEffect"
-                onClick={() => imagePickerRef.current.click()}
-              >
-                <PhotoIcon className="h-5 w-5 text-blue-500" />
-                <input
-                  type="file"
-                  hidden
-                  ref={imagePickerRef}
-                  onChange={addImageToPost}
-                />
-              </div>
-              <label htmlFor="" className="hoverEffect">
-                <FaceSmileIcon className="h-5 w-5  text-blue-500" />
-              </label>
-            </div>
-
-            <button
-              disabled={!input.trim()}
-              className="bg-blue-500 rounded-full p-3 text-white text-sm font-bold disabled:opacity-75 w-1/6 hover:brightness-75"
-              onClick={sendPost}
-            >
-              Post
-            </button>
-          </div>
-        )}
       </div>
-    </div>
+    )
   );
 }

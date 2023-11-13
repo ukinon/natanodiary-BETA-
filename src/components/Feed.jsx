@@ -1,40 +1,22 @@
+"use client";
+
 import { HeartIcon, SparklesIcon } from "@heroicons/react/20/solid";
 import Post from "./Post";
 import Stories from "./Stories";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "../../firebase";
 
 export default function Feed() {
-  const posts = [
-    {
-      id: 1,
-      name: "Arfiano Jordhy",
-      username: "@ukinoshitty",
-      userImg: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-      post: "Hello",
-      postImg:
-        "https://awsimages.detik.net.id/community/media/visual/2022/08/09/anime-aesthetic-7_169.jpeg?w=600&q=90",
-      timestamp: "1 minute ago",
-    },
-    {
-      id: 2,
-      name: "Arfiano Jordhy",
-      username: "@ukinoshitty",
-      userImg: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-      post: "Hello",
-      postImg:
-        "https://awsimages.detik.net.id/community/media/visual/2022/08/09/anime-aesthetic-7_169.jpeg?w=600&q=90",
-      timestamp: "1 minute ago",
-    },
-    {
-      id: 3,
-      name: "Arfiano Jordhy",
-      username: "@ukinoshitty",
-      userImg: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-      post: "Hello",
-      postImg:
-        "https://awsimages.detik.net.id/community/media/visual/2022/08/09/anime-aesthetic-7_169.jpeg?w=600&q=90",
-      timestamp: "1 minute ago",
-    },
-  ];
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    return onSnapshot(
+      query(collection(db, "stories"), orderBy("timestamp", "desc")),
+      (snapshot) => {
+        setPosts(snapshot.docs);
+      }
+    );
+  }, []);
 
   return (
     <div className="xl:ml-[300px] xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-200 flex-grow max-w-xl">
