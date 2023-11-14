@@ -10,8 +10,8 @@ export const metadata = {
   title: "Natano Diary",
 };
 
-export default function RootLayout({ children }) {
-  const session = getServerSession();
+export default async function RootLayout({ children }) {
+  const session = getSession();
   return (
     <html lang="en">
       <body className={montserrat.className}>
