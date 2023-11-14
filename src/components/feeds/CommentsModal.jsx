@@ -125,7 +125,7 @@ export default function CommentsModal() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Write your reply"
-                    className="w-full focus:decoration-current sm:h-28 h-20 resize-none outline-none focus:border-b-2 p-2 text-xs"
+                    className="w-full focus:decoration-current sm:h-28 h-20 resize-none outline-none focus:border-b-2 p-2 text-xs xl:text-sm"
                   ></textarea>
 
                   {selectedFile && (
