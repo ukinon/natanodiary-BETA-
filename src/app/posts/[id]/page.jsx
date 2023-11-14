@@ -39,7 +39,6 @@ export default function PostPage() {
   const [post, setPost] = useState();
   const [comments, setComments] = useState([]);
 
-  const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
