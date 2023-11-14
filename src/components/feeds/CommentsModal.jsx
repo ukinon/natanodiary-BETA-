@@ -167,7 +167,7 @@ export default function CommentsModal() {
 
                     <button
                       disabled={!input.trim()}
-                      className="bg-blue-500 rounded-full p-3 text-white text-sm font-bold disabled:opacity-75 w-1/6 hover:brightness-75"
+                      className="bg-blue-500 rounded-full p-3 text-white text-sm font-bold disabled:opacity-75 w-fit hover:brightness-75"
                       onClick={sendComment}
                     >
                       Reply
