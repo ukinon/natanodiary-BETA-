@@ -12,10 +12,11 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await getServerSession();
+
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <SessionProvider session={session} refetchInterval={60}>
+        <SessionProvider session={session} refetchOnWindowFocus>
           <RecoilRootWrapper>{children}</RecoilRootWrapper>
         </SessionProvider>
       </body>
