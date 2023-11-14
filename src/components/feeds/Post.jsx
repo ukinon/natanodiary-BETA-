@@ -4,7 +4,7 @@ import { FaceSmileIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import { sendError } from "next/dist/server/api-utils";
 import React, { useRef, useState } from "react";
-import { db, storage } from "../../firebase";
+import { db, storage } from "../../../firebase";
 import {
   addDoc,
   collection,
@@ -13,6 +13,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import EmojiPicker from "emoji-picker-react";
+import ReactModal from "react-modal";
 
 export default function Post() {
   const { data: session } = useSession();
@@ -20,6 +22,7 @@ export default function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const imagePickerRef = useRef(null);
+  const [emojiPicker, setEmojiPicker] = useState(false);
 
   async function sendPost() {
     setIsLoading(true);
@@ -106,8 +109,27 @@ export default function Post() {
                   />
                 </div>
                 <label htmlFor="" className="hoverEffect">
-                  <FaceSmileIcon className="h-5 w-5  text-blue-500" />
+                  <FaceSmileIcon
+                    className="h-5 w-5  text-blue-500"
+                    onClick={() => setEmojiPicker((prev) => !prev)}
+                  />
                 </label>
+                {emojiPicker && (
+                  <ReactModal
+                    isOpen={open}
+                    onRequestClose={() => setEmojiPicker(false)}
+                    className="max-w-lg w-[60%] h-[20px] absolute top-24 left-[50%] translate-x-[-50%] bg-white rounded-xl shadow-md border-2 border-gray-200"
+                  >
+                    <EmojiPicker
+                      searchDisabled="false"
+                      previewConfig={{ showPreview: true }}
+                      emojiStyle="google"
+                      onEmojiClick={(e) => setInput((input) => input + e.emoji)}
+                      height={400}
+                      width="100%"
+                    />
+                  </ReactModal>
+                )}
               </div>
 
               <button

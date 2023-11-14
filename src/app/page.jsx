@@ -1,12 +1,12 @@
-import CommentsModal from "@/components/CommentsModal";
-import Feed from "../components/Feed";
-import Sidebar from "../components/Sidebar";
-import Widget from "../components/Widget";
+import CommentsModal from "@/components/feeds/CommentsModal";
+import Feed from "../components/feeds/Feed";
+import Sidebar from "../components/layout/Sidebar";
+import Widget from "../components/widget/Widget";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen max-w-7xl mx-auto">
-      <Sidebar />
+      <Sidebar page="home" />
       <Feed />
       <Widget />
       <CommentsModal />

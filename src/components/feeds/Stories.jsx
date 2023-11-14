@@ -10,12 +10,13 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
 import { signIn, useSession } from "next-auth/react";
 import Moment from "react-moment";
-import { db, storage } from "../../firebase";
+import { db, storage } from "../../../firebase";
 import { useEffect, useState } from "react";
 import { deleteObject, getMetadata, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
@@ -69,7 +70,21 @@ export default function Stories({ post, id }) {
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       await deleteDoc(doc(db, "stories", id));
-      if (post?.data().image) {
+
+      // Delete the subcollection "comments"
+      const commentsCollectionRef = collection(db, "stories", id, "comments");
+      const commentsQuerySnapshot = await getDocs(commentsCollectionRef);
+      commentsQuerySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      // Delete the subcollection "likes"
+      const likesCollectionRef = collection(db, "stories", id, "likes");
+      const likesQuerySnapshot = await getDocs(likesCollectionRef);
+      likesQuerySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+      if (post?.data()?.image) {
         await deleteObject(ref(storage, `stories/${id}/image`));
       }
       router.push("/");
@@ -97,21 +112,13 @@ export default function Stories({ post, id }) {
               <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
           </div>
-          {session?.user.uid === post?.data()?.userId ? (
-            <TrashIcon
-              className="hoverEffect h-8 hover:text-red-800"
-              onClick={deletePost}
-            />
-          ) : (
-            ""
-          )}
         </div>
         <div className="flex flex-col gap-3">
           <h3 className="text-sm">{post?.data()?.text}</h3>
           <img
             src={post?.data()?.image}
             alt=""
-            className="max-w-screen xl:max-w-sm rounded-xl"
+            className="max-w-screen xl:max-w-xs rounded-xl"
           />
         </div>
         <div className="flex flex-row gap-3">
@@ -146,6 +153,14 @@ export default function Stories({ post, id }) {
               <span className="text-sm -ml-2">{likes.length}</span>
             )}
           </div>
+          {session?.user.uid === post?.data()?.userId ? (
+            <TrashIcon
+              className="hoverEffect h-9 hover:text-red-800"
+              onClick={deletePost}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

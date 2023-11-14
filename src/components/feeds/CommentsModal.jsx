@@ -5,7 +5,7 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import ReactModal from "react-modal";
 import { useRecoilState } from "recoil";
-import { db, storage } from "../../firebase";
+import { db, storage } from "../../../firebase";
 import {
   addDoc,
   collection,
@@ -46,6 +46,7 @@ export default function CommentsModal() {
       username: session?.user.username,
       userImg: session?.user.image,
       timestamp: serverTimestamp(),
+      userId: session?.user.uid,
     });
     const imageRef = ref(storage, `stories/comments/${docRef.id}/image`);
     if (selectedFile) {
