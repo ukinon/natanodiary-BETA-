@@ -13,12 +13,12 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }) {
-      session.user.username = session.user.name
+      session.user.username = await session.user.name
         .split(" ")
         .join("")
         .toLocaleLowerCase();
 
-      session.user.uid = token.sub;
+      session.user.uid = await token.sub;
       return session;
     },
   },
