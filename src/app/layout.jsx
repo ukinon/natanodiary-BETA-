@@ -9,7 +9,7 @@ export const metadata = {
   title: "Natano Diary",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
   const session = getServerSession();
   return (
     <html lang="en">
