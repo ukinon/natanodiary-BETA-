@@ -3,6 +3,7 @@ import "./globals.css";
 import SessionProvider from "../components/SessionProvider";
 import RecoilRootWrapper from "@/components/RecoilRootWrapper";
 import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 export const metadata = {
@@ -10,7 +11,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await getSession();
+  const session = await getServerSession();
   return (
     <html lang="en">
       <body className={montserrat.className}>
