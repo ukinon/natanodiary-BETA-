@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = getServerSession();
+  const session = await getServerSession();
   return (
     <html lang="en">
       <body className={montserrat.className}>
