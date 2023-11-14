@@ -35,6 +35,7 @@ export default function PostPage() {
   const params = useParams();
   const router = useRouter();
 
+  const { data: session } = useSession();
   const id = params.id;
 
   const [post, setPost] = useState();
