@@ -22,6 +22,7 @@ import { deleteObject, getMetadata, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
 import { modalState, postIDState } from "@/atom/modalAtom";
 import { useRouter } from "next/navigation";
+import { refetchState } from "@/atom/refetchAtom";
 
 export default function Stories({ post, id }) {
   const { data: session } = useSession();
@@ -30,8 +31,13 @@ export default function Stories({ post, id }) {
   const [hasLiked, setHasLiked] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
   const [postID, setPostID] = useRecoilState(postIDState);
+  const [refetch, setRefetch] = useRecoilState(refetchState);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user?.uid) setRefetch(0);
+  });
 
   useEffect(() => {
     const unsubscribe = onSnapshot(

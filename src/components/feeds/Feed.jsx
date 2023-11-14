@@ -9,10 +9,13 @@ import { db } from "../../../firebase";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRecoilState } from "recoil";
 import { searchState } from "@/atom/searchAtom";
+import { refetchState } from "@/atom/refetchAtom";
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useRecoilState(searchState);
+  const [refetch, setRefetch] = useRecoilState(refetchState);
+
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(collection(db, "stories"), orderBy("timestamp", "desc")),
