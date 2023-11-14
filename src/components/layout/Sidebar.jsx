@@ -70,7 +70,9 @@ export default function Sidebar({ page }) {
               className="h-10 xl:mr-2 rounded-full"
               src={session?.user?.image}
               alt="user"
-              onClick={signOut}
+              onClick={() => {
+                signOut({ callbackUrl: "/" });
+              }}
             />
             <div className="leading-5 hidden xl:inline text-sm overflow-hidden max-w-[110px]">
               <h4 className="font-bold text-sm">{session?.user?.name}</h4>
