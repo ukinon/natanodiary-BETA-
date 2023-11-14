@@ -8,7 +8,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Stories from "../feeds/Stories";
@@ -60,6 +60,9 @@ export default function Profile() {
               src={session?.user.image}
               alt=""
               className="rounded-full h-24 border-2 border-black"
+              onClick={() => {
+                signOut({ callbackUrl: "/" });
+              }}
             />
           </div>
 

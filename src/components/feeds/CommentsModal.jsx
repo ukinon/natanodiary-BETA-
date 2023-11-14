@@ -99,10 +99,14 @@ export default function CommentsModal() {
                 alt="user"
                 className="rounded-full h-11"
               />
-              <h1 className="font-bold text-base">{post?.data()?.name}</h1>
-              <span className="text-xs">@{post?.data()?.username}</span>
-              <span>-</span>
-              <span className="text-xs">
+              <h1 className="font-bold text-xs xl:text-base">
+                {post?.data()?.name}
+              </h1>
+              <span className="text-[7px] lg:text-xs">
+                @{post?.data()?.username}
+              </span>
+              <span className="text-[7px] lg:text-xs">-</span>
+              <span className="text-[7px] lg:text-xs">
                 {" "}
                 <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
               </span>
@@ -121,7 +125,7 @@ export default function CommentsModal() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Write your reply"
-                    className="w-full focus:decoration-current sm:h-28 h-20 resize-none outline-none focus:border-b-2 p-2"
+                    className="w-full focus:decoration-current sm:h-28 h-20 resize-none outline-none focus:border-b-2 p-2 text-xs"
                   ></textarea>
 
                   {selectedFile && (

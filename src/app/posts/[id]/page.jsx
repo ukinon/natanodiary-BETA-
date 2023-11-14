@@ -29,6 +29,7 @@ import { db, storage } from "../../../../firebase";
 import Comment from "@/components/feeds/Comment";
 import { useSession } from "next-auth/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import BottomNav from "@/components/layout/BottomNav";
 
 export default function PostPage() {
   const params = useParams();
@@ -122,7 +123,8 @@ export default function PostPage() {
 
   return (
     <main className="flex min-h-screen max-w-7xl mx-auto">
-      <Sidebar />
+      <Sidebar page="home" />
+      <BottomNav page="home" />
       <div className="xl:ml-[300px] xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-200 flex-grow max-w-xl">
         <div className="flex py-2 px-3 sticky items-center border-b-2 justify-between bg-white top-0 z-50">
           <div className="flex flex-row gap-2 items-center">

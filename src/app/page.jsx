@@ -7,11 +7,13 @@ import Widget from "../components/widget/Widget";
 import { getSession, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import BottomNav from "@/components/layout/BottomNav";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen max-w-7xl mx-auto">
       <Sidebar page="home" />
+      <BottomNav page="home" />
       <Feed />
       <Widget />
       <CommentsModal />
