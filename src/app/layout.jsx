@@ -16,7 +16,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <SessionProvider session={session} refetchOnWindowFocus>
+        <SessionProvider session={session} refetchInterval={1}>
           <RecoilRootWrapper>{children}</RecoilRootWrapper>
         </SessionProvider>
       </body>
