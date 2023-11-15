@@ -92,7 +92,7 @@ export default function Comment({ comment, commentId, originalPostId }) {
   }
 
   return (
-    <div className="flex gap-2 mb-14 sm:mb-3 border-b-2 p-2 pl-5 whitespace-break-spaces cursor-pointer hover:brightness-90 ease-in-out transition-all">
+    <div className="flex gap-2 mb-16 sm:mb-3 border-b-2 p-2 pl-5 whitespace-break-spaces cursor-pointer hover:brightness-90 ease-in-out transition-all">
       <img src={comment?.userImg} alt="user" className="h-10 rounded-full" />
       <div className="flex flex-col w-full">
         <div
@@ -118,15 +118,15 @@ export default function Comment({ comment, commentId, originalPostId }) {
           />
         </div>
         <div className="flex flex-row gap-3">
-          <div className="flex flex-row gap-1 items-center">
+          <div className="flex flex-row gap-2 items-center">
             {hasLiked ? (
               <SolidHeartIcon
-                className="h-9 text-red-400 hoverEffect"
+                className="h-7 xl:h-9 text-red-400 hoverEffect"
                 onClick={likeComment}
               />
             ) : (
               <HeartIcon
-                className="h-9 hover:text-red-400 hoverEffect"
+                className="h-7 xl:h-9 hover:text-red-400 hoverEffect"
                 onClick={likeComment}
               />
             )}
@@ -137,7 +137,7 @@ export default function Comment({ comment, commentId, originalPostId }) {
           <div className="">
             {session?.user.uid === comment?.userId ? (
               <TrashIcon
-                className="hoverEffect h-9 hover:text-red-800"
+                className="hoverEffect h-7 xl:h-9 hover:text-red-800"
                 onClick={deleteComment}
               />
             ) : (

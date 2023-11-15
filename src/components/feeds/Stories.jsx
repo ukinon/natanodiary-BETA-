@@ -132,9 +132,9 @@ export default function Stories({ post, id, dbName }) {
           />
         </div>
         <div className="flex flex-row gap-3">
-          <div className="flex flex-row gap-1 items-center">
+          <div className="flex flex-row gap-2 items-center">
             <ChatBubbleOvalLeftEllipsisIcon
-              className="h-9 hoverEffect"
+              className="h-7 xl:h-9 hoverEffect"
               onClick={() => {
                 if (!session) {
                   signIn();
@@ -147,15 +147,15 @@ export default function Stories({ post, id, dbName }) {
               <span className="text-sm -ml-2">{comments.length}</span>
             )}
           </div>
-          <div className="flex flex-row gap-1 items-center">
+          <div className="flex flex-row gap-2 items-center">
             {hasLiked ? (
               <SolidHeartIcon
-                className="h-9 text-red-400 hoverEffect"
+                className="h-7 xl:h-9 text-red-400 hoverEffect"
                 onClick={likePost}
               />
             ) : (
               <HeartIcon
-                className="h-9 hover:text-red-400 hoverEffect"
+                className="h-7 xl:h-9 hover:text-red-400 hoverEffect"
                 onClick={likePost}
               />
             )}
@@ -165,7 +165,7 @@ export default function Stories({ post, id, dbName }) {
           </div>
           {session?.user.uid === post?.data()?.userId ? (
             <TrashIcon
-              className="hoverEffect h-9 hover:text-red-800"
+              className="hoverEffect h-7 xl:h-9 hover:text-red-800"
               onClick={deletePost}
             />
           ) : (

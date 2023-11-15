@@ -136,7 +136,7 @@ export default function PostPage() {
             <h2 className="text-lg font-semibold cursor-pointer">Post</h2>
           </div>
         </div>
-        <Stories id={id} post={post} />
+        <Stories id={id} post={post} dbName="stories" />
 
         <div className="flex p-2 mb-14 sm:mb-3 gap-2 border-b-2">
           <img

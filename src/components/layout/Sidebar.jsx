@@ -23,7 +23,7 @@ import { useId } from "react";
 
 export default function Sidebar({ page }) {
   const { data: session } = useSession();
-  console.log(session?.user?.uid);
+
   return (
     <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed xl:ml-8 ml-4">
       <div className="hidden xl:flex font-semibold p-3 hoverEffect">
