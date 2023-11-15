@@ -111,7 +111,7 @@ export default function Stories({ post, id, dbName }) {
       <div className="flex flex-col w-full">
         <div
           className=" flex justify-between w-full"
-          onClick={() => router.push(`posts/${id}`)}
+          onClick={() => router.push(`posts/${id}/${dbName}`)}
         >
           <div className="flex gap-2 items-center">
             <h4 className="font-bold text-xs lg:text-sm max-w-[139px] overflow-hidden whitespace-nowrap">

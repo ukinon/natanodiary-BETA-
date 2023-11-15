@@ -16,7 +16,7 @@ export default function Home() {
       <BottomNav page="home" />
       <Feed />
       <Widget />
-      <CommentsModal />
+      <CommentsModal dbName="stories" />
     </main>
   );
 }

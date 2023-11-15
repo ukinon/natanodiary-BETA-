@@ -21,7 +21,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { modalState, postIDState } from "@/atom/modalAtom";
 
-export default function Comment({ comment, commentId, originalPostId }) {
+export default function Comment({
+  comment,
+  commentId,
+  originalPostId,
+  dbName,
+}) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
@@ -33,7 +38,7 @@ export default function Comment({ comment, commentId, originalPostId }) {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "stories", originalPostId, "comments", commentId, "likes"),
+      collection(db, dbName, originalPostId, "comments", commentId, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
   }, [db, originalPostId, commentId]);
@@ -48,7 +53,7 @@ export default function Comment({ comment, commentId, originalPostId }) {
     if (session) {
       const docRef = doc(
         db,
-        "stories",
+        dbName,
         originalPostId,
         "comments",
         commentId,
@@ -69,13 +74,11 @@ export default function Comment({ comment, commentId, originalPostId }) {
 
   async function deleteComment() {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      await deleteDoc(
-        doc(db, "stories", originalPostId, "comments", commentId)
-      );
+      await deleteDoc(doc(db, dbName, originalPostId, "comments", commentId));
 
       const likesCollectionRef = collection(
         db,
-        "stories",
+        dbName,
         originalPostId,
         "comments",
         commentId,

@@ -14,7 +14,7 @@ export default function page() {
       <BottomNav page="diary" />
       <Diary />
       <Widget />
-      <CommentsModal />
+      <CommentsModal dbName="diary" />
     </main>
   );
 }

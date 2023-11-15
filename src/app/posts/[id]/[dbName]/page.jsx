@@ -25,7 +25,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { db, storage } from "../../../../firebase";
+import { db, storage } from "../../../../../firebase";
 import Comment from "@/components/feeds/Comment";
 import { useSession } from "next-auth/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
@@ -37,6 +37,7 @@ export default function PostPage() {
 
   const { data: session } = useSession();
   const id = params.id;
+  const dbName = params.dbName;
 
   const [post, setPost] = useState();
   const [comments, setComments] = useState([]);
@@ -47,14 +48,14 @@ export default function PostPage() {
   const imagePickerRef = useRef(null);
 
   useEffect(
-    () => onSnapshot(doc(db, "stories", id), (snapshot) => setPost(snapshot)),
+    () => onSnapshot(doc(db, dbName, id), (snapshot) => setPost(snapshot)),
     [db, id]
   );
 
   useEffect(() => {
     onSnapshot(
       query(
-        collection(db, "stories", id, "comments"),
+        collection(db, dbName, id, "comments"),
         orderBy("timestamp", "desc")
       ),
       (snapshot) => setComments(snapshot.docs)
@@ -64,7 +65,7 @@ export default function PostPage() {
   async function sendComment() {
     setIsLoading(true);
 
-    const docRef = await addDoc(collection(db, "stories", id, "comments"), {
+    const docRef = await addDoc(collection(db, dbName, id, "comments"), {
       comment: input,
       name: session?.user.name,
       username: session?.user.username,
@@ -76,7 +77,7 @@ export default function PostPage() {
     if (selectedFile) {
       await uploadString(imageRef, selectedFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
-        await updateDoc(doc(db, "stories", id, "comments", docRef.id), {
+        await updateDoc(doc(db, dbName, id, "comments", docRef.id), {
           image: downloadURL,
         });
       });
@@ -100,17 +101,17 @@ export default function PostPage() {
 
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
-      await deleteDoc(doc(db, "stories", id));
+      await deleteDoc(doc(db, dbName, id));
 
       // Delete the subcollection "comments"
-      const commentsCollectionRef = collection(db, "stories", id, "comments");
+      const commentsCollectionRef = collection(db, dbName, id, "comments");
       const commentsQuerySnapshot = await getDocs(commentsCollectionRef);
       commentsQuerySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
 
       // Delete the subcollection "likes"
-      const likesCollectionRef = collection(db, "stories", id, "likes");
+      const likesCollectionRef = collection(db, dbName, id, "likes");
       const likesQuerySnapshot = await getDocs(likesCollectionRef);
       likesQuerySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
@@ -209,13 +210,14 @@ export default function PostPage() {
                 commentId={comment.id}
                 comment={comment.data()}
                 originalPostId={id}
+                dbName={dbName}
               />
             </div>
           );
         })}
       </div>
       <Widget />
-      <CommentsModal />
+      <CommentsModal dbName="diary" />
     </main>
   );
 }

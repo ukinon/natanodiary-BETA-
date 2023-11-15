@@ -20,7 +20,7 @@ import { PhotoIcon, FaceSmileIcon } from "@heroicons/react/24/outline";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useRouter } from "next/navigation";
 
-export default function CommentsModal() {
+export default function CommentsModal({ dbName }) {
   const [open, setOpen] = useRecoilState(modalState);
   const [postID] = useRecoilState(postIDState);
   const [post, setPost] = useState({});
@@ -32,7 +32,7 @@ export default function CommentsModal() {
   const router = useRouter();
 
   useEffect(() => {
-    onSnapshot(doc(db, "stories", postID), (snapshot) => {
+    onSnapshot(doc(db, dbName, postID), (snapshot) => {
       setPost(snapshot);
     });
   }, [postID, db]);
@@ -40,7 +40,7 @@ export default function CommentsModal() {
   async function sendComment() {
     setIsLoading(true);
 
-    const docRef = await addDoc(collection(db, "stories", postID, "comments"), {
+    const docRef = await addDoc(collection(db, dbName, postID, "comments"), {
       comment: input,
       name: session?.user.name,
       username: session?.user.username,
@@ -48,11 +48,11 @@ export default function CommentsModal() {
       timestamp: serverTimestamp(),
       userId: session?.user.uid,
     });
-    const imageRef = ref(storage, `stories/comments/${docRef.id}/image`);
+    const imageRef = ref(storage, `${dbName}/comments/${docRef.id}/image`);
     if (selectedFile) {
       await uploadString(imageRef, selectedFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
-        await updateDoc(doc(db, "stories", postID, "comments", docRef.id), {
+        await updateDoc(doc(db, dbName, postID, "comments", docRef.id), {
           image: downloadURL,
         });
       });
@@ -62,7 +62,7 @@ export default function CommentsModal() {
     setSelectedFile(null);
     setIsLoading(false);
     setOpen(false);
-    router.push(`/posts/${postID}`);
+    router.push(`/posts/${postID}/${dbName}`);
   }
 
   const addImageToPost = (e) => {
