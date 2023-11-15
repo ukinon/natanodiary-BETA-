@@ -114,17 +114,17 @@ export default function Stories({ post, id, dbName }) {
           onClick={() => router.push(`posts/${id}`)}
         >
           <div className="flex gap-2 items-center">
-            <h4 className="font-bold text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
+            <h4 className="font-bold text-xs lg:text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
               {post?.data()?.name}
             </h4>
-            <p className="text-xs">@{post?.data()?.username}</p>
-            <span className="text-xs">
-              <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
+            <p className="text-[10px] lg:text-xs">@{post?.data()?.username}</p>
+            <span className="text-[10px] lg:text-xs flex flex-row gap-1">
+              -<Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          <h3 className="text-sm">{post?.data()?.text}</h3>
+          <h3 className="text-xs xl:text-sm">{post?.data()?.text}</h3>
           <img
             src={post?.data()?.image}
             alt=""

@@ -100,17 +100,17 @@ export default function Comment({ comment, commentId, originalPostId }) {
           onClick={() => router.push(`/posts/${id}`)}
         >
           <div className="flex gap-2 items-center">
-            <h4 className="font-bold text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
+            <h4 className="font-bold text-xs lg:text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
               {comment?.name}
             </h4>
-            <p className="text-xs">@{comment?.username}</p>
-            <span className="text-xs">
-              <Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
+            <p className="text-[10px] lg:text-xs">@{comment?.username}</p>
+            <span className="text-[10px] lg:text-xs flex flex-row gap-1">
+              -<Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
             </span>
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          <h3 className="text-sm">{comment?.comment}</h3>
+          <h3 className="text-xs lg:text-sm">{comment?.comment}</h3>
           <img
             src={comment?.image}
             alt=""
