@@ -24,7 +24,7 @@ import { modalState, postIDState } from "@/atom/modalAtom";
 import { useRouter } from "next/navigation";
 import { refetchState } from "@/atom/refetchAtom";
 
-export default function Stories({ post, id }) {
+export default function Stories({ post, id, dbName }) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
@@ -41,13 +41,13 @@ export default function Stories({ post, id }) {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "stories", id, "likes"),
+      collection(db, dbName, id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
   }, [db, id]);
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "stories", id, "comments"),
+      collection(db, dbName, id, "comments"),
       (snapshot) => setComments(snapshot.docs)
     );
   }, [db]);
@@ -60,7 +60,7 @@ export default function Stories({ post, id }) {
 
   async function likePost() {
     if (session) {
-      const docRef = doc(db, "stories", id, "likes", session?.user.uid);
+      const docRef = doc(db, dbName, id, "likes", session?.user.uid);
       if (hasLiked) {
         await deleteDoc(docRef);
       } else {
@@ -75,25 +75,29 @@ export default function Stories({ post, id }) {
 
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
-      await deleteDoc(doc(db, "stories", id));
+      await deleteDoc(doc(db, dbName, id));
 
       // Delete the subcollection "comments"
-      const commentsCollectionRef = collection(db, "stories", id, "comments");
+      const commentsCollectionRef = collection(db, dbName, id, "comments");
       const commentsQuerySnapshot = await getDocs(commentsCollectionRef);
       commentsQuerySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
 
       // Delete the subcollection "likes"
-      const likesCollectionRef = collection(db, "stories", id, "likes");
+      const likesCollectionRef = collection(db, dbName, id, "likes");
       const likesQuerySnapshot = await getDocs(likesCollectionRef);
       likesQuerySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
       if (post?.data()?.image) {
-        await deleteObject(ref(storage, `stories/${id}/image`));
+        await deleteObject(ref(storage, `${dbName}/${id}/image`));
       }
-      router.push("/");
+      if (dbName === "diary") {
+        router.push("/diary");
+      } else {
+        router.push("/");
+      }
     }
   }
 

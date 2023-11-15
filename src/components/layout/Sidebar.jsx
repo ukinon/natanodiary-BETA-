@@ -6,6 +6,7 @@ import {
   HomeIcon,
   InboxIcon,
   UserIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 import {
   BellIcon as BellSolid,
@@ -13,6 +14,7 @@ import {
   HomeIcon as HomeSolid,
   InboxIcon as InboxSolid,
   UserIcon as UserSolid,
+  BookOpenIcon as BookOpenSolid,
 } from "@heroicons/react/24/solid";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -21,6 +23,7 @@ import { useId } from "react";
 
 export default function Sidebar({ page }) {
   const { data: session } = useSession();
+  console.log(session?.user?.uid);
   return (
     <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed xl:ml-8 ml-4">
       <div className="hidden xl:flex font-semibold p-3 hoverEffect">
@@ -40,11 +43,22 @@ export default function Sidebar({ page }) {
           active={page == "home" ? true : false}
           route="/"
         />
+        {(session?.user?.uid == "117487005038456689173" ||
+          session?.user?.uid == "113102668461930369111") && (
+          <SidebarMenu
+            text="Diary"
+            Icon={page == "diary" ? BookOpenSolid : BookOpenIcon}
+            active={page == "diary" ? true : false}
+            route="/diary"
+          />
+        )}
+
         <SidebarMenu
           text="Notifications"
           Icon={page == "noitf" ? BellSolid : BellIcon}
           active={page == "notif" ? true : false}
         />
+
         <SidebarMenu
           text="Messages"
           Icon={page == "message" ? InboxSolid : InboxIcon}

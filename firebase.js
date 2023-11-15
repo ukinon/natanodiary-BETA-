@@ -12,7 +12,7 @@ const firebaseConfig = {
   authDomain: "natano-diary-v2.firebaseapp.com",
   projectId: "natano-diary-v2",
   storageBucket: "natano-diary-v2.appspot.com",
-  messagingSenderId: "531117940675",
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
   appId: "1:531117940675:web:0fd563720d850162886776",
   measurementId: "G-G5XZHZ82Z8",
 };

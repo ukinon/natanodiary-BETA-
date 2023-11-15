@@ -16,7 +16,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import EmojiPicker from "emoji-picker-react";
 import ReactModal from "react-modal";
 
-export default function Post() {
+export default function Post({ dbName }) {
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,7 @@ export default function Post() {
 
   async function sendPost() {
     setIsLoading(true);
-    const docRef = await addDoc(collection(db, "stories"), {
+    const docRef = await addDoc(collection(db, dbName), {
       id: session?.user?.uid,
       text: input,
       userImg: session?.user?.image,
@@ -35,11 +35,11 @@ export default function Post() {
       username: session?.user?.username,
       userId: session?.user.uid,
     });
-    const imageRef = ref(storage, `stories/${docRef.id}/image`);
+    const imageRef = ref(storage, `${dbName}/${docRef.id}/image`);
     if (selectedFile) {
       await uploadString(imageRef, selectedFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
-        await updateDoc(doc(db, "stories", docRef.id), {
+        await updateDoc(doc(db, dbName, docRef.id), {
           image: downloadURL,
         });
       });
