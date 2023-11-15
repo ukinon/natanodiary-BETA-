@@ -20,7 +20,7 @@ import SignInButton from "./SignInButton";
 export default function BottomNav({ page }) {
   const { data: session } = useSession();
   return (
-    <div className="flex p-4 border-t-2 border-gray-400 bg-white w-full sm:hidden flex-row justify-between gap-3 sm:items-start bottom-0 fixed z-50 rounded-t-lg px-8">
+    <div className="flex p-2 border-t-2 border-gray-400 bg-white w-full sm:hidden flex-row justify-between gap-3 sm:items-start bottom-0 fixed z-50 rounded-t-lg px-8">
       <SidebarMenu
         text="Home"
         Icon={page == "home" ? HomeSolid : HomeIcon}
