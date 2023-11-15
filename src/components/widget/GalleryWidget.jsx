@@ -11,18 +11,36 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
+import { useSession } from "next-auth/react";
 
 export default function GalleryWidget() {
   const [images, setImages] = useState([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     return onSnapshot(
       query(collection(db, "stories"), orderBy("timestamp", "desc")),
       (snapshot) => {
-        setImages(snapshot.docs.map((doc) => doc.data().image));
+        const filteredPosts = snapshot.docs.filter((post) => {
+          if (
+            session?.user.uid == "117487005038456689173" ||
+            session?.user.uid == "113102668461930369111"
+          ) {
+            return (
+              post.data().userId == "113102668461930369111" ||
+              post.data().userId == "117487005038456689173"
+            );
+          } else {
+            return (
+              post.data().userId != "113102668461930369111" &&
+              post.data().userId != "117487005038456689173"
+            );
+          }
+        });
+        setImages(filteredPosts.map((doc) => doc.data().image));
       }
     );
-  }, []);
+  }, [session]);
   return (
     <div className="max-w-[90%] sticky top-16">
       <div className="bg-gray-200 rounded-xl flex flex-col p-5 gap-3">

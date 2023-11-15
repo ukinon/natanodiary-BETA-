@@ -4,33 +4,54 @@ import { HeartIcon, SparklesIcon } from "@heroicons/react/20/solid";
 import Post from "./Post";
 import Stories from "./Stories";
 import { useEffect, useState } from "react";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../firebase";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRecoilState } from "recoil";
 import { searchState } from "@/atom/searchAtom";
 import { refetchState } from "@/atom/refetchAtom";
+import { useSession } from "next-auth/react";
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useRecoilState(searchState);
   const [refetch, setRefetch] = useRecoilState(refetchState);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(collection(db, "stories"), orderBy("timestamp", "desc")),
       (snapshot) => {
-        const filteredPosts = snapshot.docs.filter((post) =>
-          post.data().text.includes(search)
-        );
-        setPosts(snapshot.docs);
-        if (filteredPosts.length > 0) {
-          setPosts(filteredPosts);
-        }
+        const filteredPosts = snapshot.docs.filter((post) => {
+          if (
+            session?.user.uid == "117487005038456689173" ||
+            session?.user.uid == "113102668461930369111"
+          ) {
+            return (
+              post.data().text.includes(search) &&
+              (post.data().userId == "113102668461930369111" ||
+                post.data().userId == "117487005038456689173")
+            );
+          } else {
+            return (
+              post.data().text.includes(search) &&
+              post.data().userId != "113102668461930369111" &&
+              post.data().userId != "117487005038456689173"
+            );
+          }
+        });
+
+        setPosts(filteredPosts);
       }
     );
     return () => unsubscribe();
-  }, [search]);
+  }, [search, session]);
 
   return (
     <div className="xl:ml-[300px] mb-10 sm:mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-200 flex-grow max-w-xl">
