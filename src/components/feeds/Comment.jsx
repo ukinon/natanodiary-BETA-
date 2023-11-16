@@ -38,14 +38,7 @@ export default function Comment({
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(
-        db,
-        dbNameWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW,
-        originalPostId,
-        "comments",
-        commentId,
-        "likes"
-      ),
+      collection(db, dbName, originalPostId, "comments", commentId, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
   }, [db, originalPostId, commentId]);
@@ -60,7 +53,7 @@ export default function Comment({
     if (session) {
       const docRef = doc(
         db,
-        dbNameWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW,
+        dbName,
         originalPostId,
         "comments",
         commentId,
@@ -81,19 +74,11 @@ export default function Comment({
 
   async function deleteComment() {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      await deleteDoc(
-        doc(
-          db,
-          dbNameWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW,
-          originalPostId,
-          "comments",
-          commentId
-        )
-      );
+      await deleteDoc(doc(db, dbName, originalPostId, "comments", commentId));
 
       const likesCollectionRef = collection(
         db,
-        dbNameWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW,
+        dbName,
         originalPostId,
         "comments",
         commentId,
