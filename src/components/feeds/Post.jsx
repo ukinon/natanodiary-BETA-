@@ -62,7 +62,7 @@ export default function Post({ dbName }) {
 
   return (
     session && (
-      <div className="flex m-3 gap-2 border-b-2">
+      <div className="flex m-0 p-3 gap-2 border-b-2 border-gray-100">
         <img
           src={session?.user?.image}
           alt="user"
@@ -93,7 +93,7 @@ export default function Post({ dbName }) {
             )}
           </div>
           {!isLoading && (
-            <div className="flex justify-between items-center mb-3">
+            <div className="flex justify-between items-center">
               <div className="flex gap-3">
                 <div
                   className="hoverEffect"

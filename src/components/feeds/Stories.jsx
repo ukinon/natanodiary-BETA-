@@ -102,7 +102,7 @@ export default function Stories({ post, id, dbName }) {
   }
 
   return (
-    <div className="flex gap-2 mb-3 border-b-2 p-3 whitespace-break-spaces cursor-pointer hover:brightness-90 ease-in-out transition-all">
+    <div className="flex gap-2 mb-3 border-b-2 border-gray-100 p-3 whitespace-break-spaces cursor-pointer hover:brightness-90 ease-in-out transition-all">
       <img
         src={post?.data()?.userImg}
         alt="user"

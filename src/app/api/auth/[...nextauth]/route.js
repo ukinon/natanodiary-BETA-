@@ -19,6 +19,7 @@ export const authOptions = {
         .toLocaleLowerCase();
 
       session.user.uid = token.sub;
+      session.user.hasNotif = false;
       return session;
     },
   },

@@ -55,14 +55,16 @@ export default function Sidebar({ page }) {
 
         <SidebarMenu
           text="Notifications"
-          Icon={page == "noitf" ? BellSolid : BellIcon}
+          Icon={page == "notif" ? BellSolid : BellIcon}
           active={page == "notif" ? true : false}
+          route={`/notifications/${session?.user?.uid}`}
         />
 
         <SidebarMenu
           text="Messages"
           Icon={page == "message" ? InboxSolid : InboxIcon}
           active={page == "message" ? true : false}
+          route={`/messages/${session?.user.uid}`}
         />
         <SidebarMenu
           text="Profile"
