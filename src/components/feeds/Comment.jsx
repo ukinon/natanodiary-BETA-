@@ -4,10 +4,9 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
-import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
-import { db, storage } from "../../../firebase";
+import { auth, db, storage } from "../../../firebase";
 import {
   collection,
   deleteDoc,
@@ -17,9 +16,8 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { useParams, useRouter } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { modalState, postIDState } from "@/atom/modalAtom";
+import { useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Comment({
   comment,
@@ -27,12 +25,9 @@ export default function Comment({
   originalPostId,
   dbName,
 }) {
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
-  const [open, setOpen] = useRecoilState(modalState);
-  const [postID, setPostID] = useRecoilState(postIDState);
-  const params = useParams();
 
   const router = useRouter();
 
@@ -41,16 +36,15 @@ export default function Comment({
       collection(db, dbName, originalPostId, "comments", commentId, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
+    return () => unsubscribe();
   }, [db, originalPostId, commentId]);
 
   useEffect(() => {
-    setHasLiked(
-      likes.findIndex((like) => like.id === session?.user.uid) !== -1
-    );
+    setHasLiked(likes.findIndex((like) => like.id === session?.uid) !== -1);
   }, [likes]);
 
   async function likeComment() {
-    if (session) {
+    if (auth.currentUser) {
       const docRef = doc(
         db,
         dbName,
@@ -58,13 +52,13 @@ export default function Comment({
         "comments",
         commentId,
         "likes",
-        session?.user.uid
+        session?.uid
       );
       if (hasLiked) {
         await deleteDoc(docRef);
       } else {
         await setDoc(docRef, {
-          username: session.user.username,
+          username: session?.displayName,
         });
       }
     } else {
@@ -138,7 +132,7 @@ export default function Comment({
             )}
           </div>
           <div className="">
-            {session?.user.uid === comment?.userId ? (
+            {session?.uid === comment?.userId ? (
               <TrashIcon
                 className="hoverEffect h-7 xl:h-9 hover:text-red-800"
                 onClick={deleteComment}

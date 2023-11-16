@@ -14,30 +14,25 @@ import {
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Moment from "react-moment";
-import { db, storage } from "../../../firebase";
+import { auth, db, storage } from "../../../firebase";
 import { useEffect, useState } from "react";
 import { deleteObject, getMetadata, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
 import { modalState, postIDState } from "@/atom/modalAtom";
 import { useRouter } from "next/navigation";
-import { refetchState } from "@/atom/refetchAtom";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Stories({ post, id, dbName }) {
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
   const [postID, setPostID] = useRecoilState(postIDState);
-  const [refetch, setRefetch] = useRecoilState(refetchState);
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (session?.user?.uid) setRefetch(0);
-  });
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -53,19 +48,17 @@ export default function Stories({ post, id, dbName }) {
   }, [db]);
 
   useEffect(() => {
-    setHasLiked(
-      likes.findIndex((like) => like.id === session?.user.uid) !== -1
-    );
+    setHasLiked(likes.findIndex((like) => like.id === session?.uid) !== -1);
   }, [likes]);
 
   async function likePost() {
-    if (session) {
-      const docRef = doc(db, dbName, id, "likes", session?.user.uid);
+    if (auth.currentUser) {
+      const docRef = doc(db, dbName, id, "likes", session?.uid);
       if (hasLiked) {
         await deleteDoc(docRef);
       } else {
         await setDoc(docRef, {
-          username: session.user.username,
+          email: session.email,
         });
       }
     } else {
@@ -117,7 +110,7 @@ export default function Stories({ post, id, dbName }) {
             <h4 className="font-bold text-xs lg:text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
               {post?.data()?.name}
             </h4>
-            <p className="text-[10px] lg:text-xs">@{post?.data()?.username}</p>
+            <p className="text-[10px] lg:text-xs">@{post?.data()?.email}</p>
             <span className="text-[10px] lg:text-xs flex flex-row gap-1">
               -<Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
@@ -136,7 +129,7 @@ export default function Stories({ post, id, dbName }) {
             <ChatBubbleOvalLeftEllipsisIcon
               className="h-7 xl:h-9 hoverEffect"
               onClick={() => {
-                if (!session) {
+                if (!auth.currentUser) {
                   signIn();
                 }
                 setPostID(id);
@@ -163,7 +156,7 @@ export default function Stories({ post, id, dbName }) {
               <span className="text-sm -ml-2">{likes.length}</span>
             )}
           </div>
-          {session?.user.uid === post?.data()?.userId ? (
+          {session?.uid === post?.data()?.userId ? (
             <TrashIcon
               className="hoverEffect h-7 xl:h-9 hover:text-red-800"
               onClick={deletePost}

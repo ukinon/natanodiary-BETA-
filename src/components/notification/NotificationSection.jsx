@@ -8,16 +8,15 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import Stories from "../feeds/Stories";
 import { AnimatePresence, motion } from "framer-motion";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function NotificationSection() {
   const router = useRouter();
-  const { data: session } = useSession("");
+  const [session] = useAuthState(auth);
   const [posts, setPosts] = useState([]);
 
   return (

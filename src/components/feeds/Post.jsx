@@ -4,7 +4,7 @@ import { FaceSmileIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import { sendError } from "next/dist/server/api-utils";
 import React, { useRef, useState } from "react";
-import { db, storage } from "../../../firebase";
+import { auth, db, storage } from "../../../firebase";
 import {
   addDoc,
   collection,
@@ -15,9 +15,10 @@ import {
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import EmojiPicker from "emoji-picker-react";
 import ReactModal from "react-modal";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Post({ dbName }) {
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -27,13 +28,13 @@ export default function Post({ dbName }) {
   async function sendPost() {
     setIsLoading(true);
     const docRef = await addDoc(collection(db, dbName), {
-      id: session?.user?.uid,
+      id: session?.uid,
       text: input,
-      userImg: session?.user?.image,
+      userImg: session?.photoURL,
       timestamp: serverTimestamp(),
-      name: session?.user?.name,
-      username: session?.user?.username,
-      userId: session?.user.uid,
+      name: session?.displayName,
+      email: session?.email,
+      userId: session?.uid,
     });
     const imageRef = ref(storage, `${dbName}/${docRef.id}/image`);
     if (selectedFile) {
@@ -63,11 +64,7 @@ export default function Post({ dbName }) {
   return (
     session && (
       <div className="flex m-0 p-3 gap-2 border-b-2 border-gray-100">
-        <img
-          src={session?.user?.image}
-          alt="user"
-          className="h-10 rounded-full"
-        />
+        <img src={session?.photoURL} alt="user" className="h-10 rounded-full" />
         <div className="w-full ">
           <div>
             <textarea

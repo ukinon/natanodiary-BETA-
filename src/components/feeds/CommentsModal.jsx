@@ -5,7 +5,7 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useEffect, useRef, useState } from "react";
 import ReactModal from "react-modal";
 import { useRecoilState } from "recoil";
-import { db, storage } from "../../../firebase";
+import { auth, db, storage } from "../../../firebase";
 import {
   addDoc,
   collection,
@@ -15,16 +15,16 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import Moment from "react-moment";
-import { useSession } from "next-auth/react";
 import { PhotoIcon, FaceSmileIcon } from "@heroicons/react/24/outline";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function CommentsModal({ dbName }) {
   const [open, setOpen] = useRecoilState(modalState);
   const [postID] = useRecoilState(postIDState);
   const [post, setPost] = useState({});
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,11 +42,11 @@ export default function CommentsModal({ dbName }) {
 
     const docRef = await addDoc(collection(db, dbName, postID, "comments"), {
       comment: input,
-      name: session?.user.name,
-      username: session?.user.username,
-      userImg: session?.user.image,
+      name: session?.displayName,
+      email: session?.email,
+      userImg: session?.photoURL,
       timestamp: serverTimestamp(),
-      userId: session?.user.uid,
+      userId: session?.uid,
     });
     const imageRef = ref(storage, `${dbName}/comments/${docRef.id}/image`);
     if (selectedFile) {
@@ -114,7 +114,7 @@ export default function CommentsModal({ dbName }) {
             <p className="text-sm ml-16 mb-3">{post?.data()?.text}</p>
             <div className="flex p-2 gap-2 border-b-2">
               <img
-                src={session?.user?.image}
+                src={session?.photoURL}
                 alt="user"
                 className="h-11 rounded-full"
               />

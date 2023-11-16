@@ -14,11 +14,12 @@ import {
   InboxIcon as InboxSolid,
   UserIcon as UserSolid,
 } from "@heroicons/react/24/solid";
-import { useSession, signOut } from "next-auth/react";
 import SignInButton from "./SignInButton";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase.js";
 
 export default function BottomNav({ page }) {
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   return (
     <div className="flex p-2 border-t-2 border-gray-400 bg-white w-full sm:hidden flex-row justify-between gap-3 sm:items-start bottom-0 fixed z-50 rounded-t-lg px-8">
       <SidebarMenu
@@ -27,8 +28,8 @@ export default function BottomNav({ page }) {
         active={page == "home" ? true : false}
         route="/"
       />
-      {(session?.user?.uid == "117487005038456689173" ||
-        session?.user?.uid == "113102668461930369111") && (
+      {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
+        session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
         <SidebarMenu
           text="Diary"
           Icon={page == "diary" ? BookOpenSolid : BookOpenIcon}
@@ -38,15 +39,21 @@ export default function BottomNav({ page }) {
       )}
       <SidebarMenu
         text="Notifications"
-        Icon={page == "noitf" ? BellSolid : BellIcon}
+        Icon={page == "notif" ? BellSolid : BellIcon}
         active={page == "notif" ? true : false}
+        route={`/notifications/${session?.uid}`}
       />
-      <SidebarMenu
-        text="Messages"
-        Icon={page == "message" ? InboxSolid : InboxIcon}
-        active={page == "message" ? true : false}
-      />
-      {session ? (
+
+      {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
+        session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
+        <SidebarMenu
+          text="Messages"
+          Icon={page == "message" ? InboxSolid : InboxIcon}
+          active={page == "message" ? true : false}
+          route={`/chat/${session?.uid}`}
+        />
+      )}
+      {auth.currentUser ? (
         <SidebarMenu
           text="Profile"
           Icon={page == "profile" ? UserSolid : UserIcon}

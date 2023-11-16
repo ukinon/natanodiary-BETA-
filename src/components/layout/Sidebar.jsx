@@ -16,13 +16,13 @@ import {
   UserIcon as UserSolid,
   BookOpenIcon as BookOpenSolid,
 } from "@heroicons/react/24/solid";
-import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
 import SignInButton from "./SignInButton";
-import { useId } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { auth } from "../../../firebase.js";
 
 export default function Sidebar({ page }) {
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
 
   return (
     <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed xl:ml-8 ml-4">
@@ -43,8 +43,8 @@ export default function Sidebar({ page }) {
           active={page == "home" ? true : false}
           route="/"
         />
-        {(session?.user?.uid == "117487005038456689173" ||
-          session?.user?.uid == "113102668461930369111") && (
+        {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
+          session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
           <SidebarMenu
             text="Diary"
             Icon={page == "diary" ? BookOpenSolid : BookOpenIcon}
@@ -57,15 +57,18 @@ export default function Sidebar({ page }) {
           text="Notifications"
           Icon={page == "notif" ? BellSolid : BellIcon}
           active={page == "notif" ? true : false}
-          route={`/notifications/${session?.user?.uid}`}
+          route={`/notifications/${session?.uid}`}
         />
 
-        <SidebarMenu
-          text="Messages"
-          Icon={page == "message" ? InboxSolid : InboxIcon}
-          active={page == "message" ? true : false}
-          route={`/messages/${session?.user.uid}`}
-        />
+        {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
+          session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
+          <SidebarMenu
+            text="Messages"
+            Icon={page == "message" ? InboxSolid : InboxIcon}
+            active={page == "message" ? true : false}
+            route={`/chat/${session?.uid}`}
+          />
+        )}
         <SidebarMenu
           text="Profile"
           Icon={page == "profile" ? UserSolid : UserIcon}
@@ -80,19 +83,19 @@ export default function Sidebar({ page }) {
       </div>
 
       <div className="hoverEffect text-gray-700 flex items-center space-x-3 justify-center mt-auto bottom-3 fixed bg-gray-100 overflow-hidden whitespace-nowrap">
-        {session ? (
+        {auth.currentUser ? (
           <>
             <img
-              className="h-10 xl:mr-2 rounded-full"
-              src={session?.user?.image}
-              alt="user"
               onClick={() => {
-                signOut({ callbackUrl: "/" });
+                auth.signOut();
               }}
+              className="h-10 xl:mr-2 rounded-full"
+              src={session?.photoURL}
+              alt="user"
             />
             <div className="leading-5 hidden xl:inline text-sm overflow-hidden max-w-[110px]">
-              <h4 className="font-bold text-sm">{session?.user?.name}</h4>
-              <p className="text-xs">@{session?.user?.username}</p>
+              <h4 className="font-bold text-sm">{session?.displayName}</h4>
+              <p className="text-xs">{session?.email}</p>
             </div>
             <EllipsisHorizontalIcon className="h-5 xl:ml-8 hidden xl:inline" />
           </>

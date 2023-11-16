@@ -3,26 +3,24 @@
 import { HeartIcon, SparklesIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRecoilState } from "recoil";
 import { searchState } from "@/atom/searchAtom";
-import { refetchState } from "@/atom/refetchAtom";
 import Post from "../feeds/Post";
 import Stories from "../feeds/Stories";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Diary() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useRecoilState(searchState);
-  const [refetch, setRefetch] = useRecoilState(refetchState);
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   const router = useRouter();
 
   if (
-    session?.user?.uid != "117487005038456689173" &&
-    session?.user?.uid != "113102668461930369111"
+    session?.uid != "0GKxYyf0pBSecoyngvhVJ3GJgCa2" &&
+    session?.uid != "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1"
   ) {
     router.push("/");
   }

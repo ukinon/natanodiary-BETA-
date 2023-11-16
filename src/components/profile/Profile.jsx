@@ -8,26 +8,26 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Stories from "../feeds/Stories";
 import { AnimatePresence, motion } from "framer-motion";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Profile() {
   const router = useRouter();
-  const { data: session } = useSession("");
+  const [session] = useAuthState(auth);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      if (session?.user.uid) {
+      if (session?.uid) {
         const unsubscribe = onSnapshot(
           query(
             collection(db, "stories"),
             orderBy("timestamp", "desc"),
-            where("userId", "==", session?.user?.uid)
+            where("userId", "==", session?.uid)
           ),
           (snapshot) => {
             setPosts(snapshot.docs);
@@ -57,11 +57,11 @@ export default function Profile() {
         <div className="flex flex-row justify-between">
           <div className="p-5 -mt-16">
             <img
-              src={session?.user.image}
+              src={session?.photoURL}
               alt=""
               className="rounded-full h-24 border-2 border-black"
               onClick={() => {
-                signOut({ callbackUrl: "/" });
+                auth.signOut();
               }}
             />
           </div>
@@ -72,8 +72,8 @@ export default function Profile() {
         </div>
 
         <div className="px-5 mb-5">
-          <h1>{session?.user.name}</h1>
-          <p className="text-xs text-gray-500">@{session?.user.username}</p>
+          <h1>{session?.displayName}</h1>
+          <p className="text-xs text-gray-500">{session?.email}</p>
         </div>
       </div>
 

@@ -3,22 +3,34 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import {
   collection,
+  doc,
   onSnapshot,
   orderBy,
   query,
   where,
 } from "firebase/firestore";
-import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Stories from "../feeds/Stories";
 import { AnimatePresence, motion } from "framer-motion";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import Chats from "./Chats";
 
 export default function MessageSection() {
   const router = useRouter();
-  const { data: session } = useSession("");
-  const [posts, setPosts] = useState([]);
+  const [session] = useAuthState(auth);
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    if (session) {
+      const unsubscribe = onSnapshot(
+        collection(db, "messages", session?.uid, "message_list"),
+        (snapshot) => setChats(snapshot.docs)
+      );
+      return () => unsubscribe();
+    }
+  }, [db, session]);
 
   return (
     <div className="xl:ml-[300px] mb-12 sm:mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
@@ -31,6 +43,10 @@ export default function MessageSection() {
           <h2 className="text-lg font-semibold cursor-pointer">Messages</h2>
         </div>
       </div>
+
+      {chats.map((chat) => (
+        <Chats key={chat.id} id={chat.id} />
+      ))}
     </div>
   );
 }
