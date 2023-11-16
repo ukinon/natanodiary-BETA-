@@ -35,7 +35,7 @@ export default function GalleryWidget() {
                   src={image}
                   alt="image"
                   key={image}
-                  className="cursor-pointer hover:brightness-75 h-32 w-full object-cover"
+                  className="cursor-pointer hover:brightness-75 h-24 w-full object-cover"
                 />
               );
             }
