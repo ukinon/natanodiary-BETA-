@@ -7,6 +7,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -57,17 +58,19 @@ export default function MessageRoom() {
   useEffect(() => {
     if (session) {
       const get = async () => {
-        const docRef = doc(db, "is_typing", session?.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setIsTexting(docSnap.data());
-        } else {
-          setIsTexting([]); // Set to null if the document doesn't exist
-        }
+        const docRef = collection(db, "is_typing");
+        const q = query(docRef, where("uid", "!=", session?.uid));
+        const docSnap = await getDocs(q);
+
+        docSnap.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          setIsTexting(doc.data());
+        });
       };
       get();
     }
   }, [session, formValue]);
+  console.log(isTexting);
 
   async function sendMessage(e) {
     e.preventDefault();
@@ -124,7 +127,7 @@ export default function MessageRoom() {
             </>
           ))}
 
-        {isTexting && session && (
+        {isTexting.length > 0 && isTexting.uid != session?.uid && session && (
           <TypingBubble
             uid={`${isTexting.uid}`}
             photoURL={isTexting.photoURL}
