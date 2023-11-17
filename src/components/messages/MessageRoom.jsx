@@ -42,6 +42,7 @@ export default function MessageRoom() {
   const [messages, setMessages] = useState([]);
   const [isTexting, setIsTexting] = useState([]);
   let formRef = useRef();
+  const dummy = useRef();
 
   useEffect(() => {
     if (session) {
@@ -51,25 +52,29 @@ export default function MessageRoom() {
         (snapshot) => setMessages(snapshot.docs)
       );
       setIsLoading(false);
+      const lastChildElement = dummy.current.lastElementChild;
+      lastChildElement?.scrollIntoView({ behavior: "smooth" });
       return () => unsubscribe();
     }
   }, [db, session]);
 
   useEffect(() => {
     if (session) {
-      const get = async () => {
-        const docRef = collection(db, "is_typing");
-        const q = query(docRef, where("uid", "!=", session?.uid));
-        const docSnap = await getDocs(q);
-
-        docSnap.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          setIsTexting(doc.data());
-        });
-      };
-      get();
+      setIsLoading(true);
+      const unsubscribe = onSnapshot(
+        query(collection(db, "is_typing"), where("uid", "!=", session?.uid)),
+        (snapshot) => setIsTexting(snapshot.docs)
+      );
+      setIsLoading(false);
+      return () => unsubscribe();
     }
-  }, [session, formValue]);
+  }, [db, formValue]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", deleteTyping);
+    dummy.current.scrollIntoView({ behavior: "smooth" });
+  }, [session]);
+
   console.log(isTexting);
 
   async function sendMessage(e) {
@@ -82,17 +87,24 @@ export default function MessageRoom() {
       timestamp: serverTimestamp(),
     });
     setFormValue("");
+    dummy.current.scrollIntoView({ behavior: "smooth" });
   }
 
-  async function isTyping(e) {
+  function deleteTyping() {
+    if (session) {
+      deleteDoc(doc(db, "is_typing", auth.currentUser.uid));
+      setIsTexting([]);
+    }
+  }
+
+  function isTyping(e) {
     if (e != "") {
-      await setDoc(doc(db, "is_typing", auth.currentUser.uid), {
+      setDoc(doc(db, "is_typing", auth.currentUser.uid), {
         uid: auth.currentUser.uid,
         photoURL: auth.currentUser.photoURL,
       });
     } else {
-      await deleteDoc(doc(db, "is_typing", auth.currentUser.uid));
-      setIsTexting([]);
+      deleteTyping();
     }
   }
 
@@ -118,29 +130,60 @@ export default function MessageRoom() {
           <h2 className="text-lg font-semibold cursor-pointer">Chat</h2>
         </div>
       </div>
-      <div className="min-h-[80%] xl:min-h-screen">
-        {!isLoading &&
-          messages &&
-          messages.map((message) => (
-            <>
-              <ChatBubble message={message} key={message.id} />
-            </>
-          ))}
+      <div className="min-h-[80%] xl:min-h-screen ">
+        <AnimatePresence>
+          {!isLoading &&
+            messages &&
+            session?.uid &&
+            messages.map((message) => (
+              <>
+                <motion.div
+                  key={message.uid}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <ChatBubble
+                    message={message}
+                    key={message.id}
+                    timestamp={message.timestamp}
+                  />
+                </motion.div>
+              </>
+            ))}
+          {!isLoading &&
+            isTexting &&
+            isTexting.map((message) => (
+              <>
+                <motion.div
+                  key={message.uid}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <TypingBubble
+                    uid={message.data().uid}
+                    photoURL={message.data().photoURL}
+                  />
+                </motion.div>
+              </>
+            ))}
 
-        {isTexting.length > 0 && isTexting.uid != session?.uid && session && (
-          <TypingBubble
-            uid={`${isTexting.uid}`}
-            photoURL={isTexting.photoURL}
-            key={isTexting.uid}
-          />
-        )}
-
-        {isLoading && <p className="min-h-screen"> Loading ...</p>}
+          {isLoading && (
+            <p className="min-h-screen" key={session?.uid}>
+              {" "}
+              Loading ...
+            </p>
+          )}
+          <div className="fixed bottom-0" ref={dummy}></div>
+        </AnimatePresence>
       </div>
-      <div className="flex items-center bg-white sticky p-4 bottom-12 sm:bottom-0 border-t-2">
+      <div className="flex items-center bg-white sticky p-4 bottom-0 border-t-2">
         <form
           action=""
-          className="flex flex-row justify-between px-5 py-2 bg-gray-400 rounded-xl text-white w-full"
+          className="flex flex-row justify-between px-5 py-2 bg-gray-300 rounded-xl text-black w-full"
           onSubmit={sendMessage}
           ref={(el) => (formRef = el)}
         >
@@ -161,7 +204,7 @@ export default function MessageRoom() {
           <textarea
             value={formValue}
             onChange={handleInputChange}
-            className="w-[70%] bg-transparent border-none outline-none text-white placeholder:text-white resize-none h-7 pt-1"
+            className="w-[70%] bg-transparent border-none outline-none text-black placeholder:text-black resize-none h-7 pt-1"
             placeholder="Type Your Message Here"
             onKeyDown={onEnterPress}
           />

@@ -1,15 +1,18 @@
 import React from "react";
 import { auth } from "../../../firebase";
+import Moment from "react-moment";
 
 export default function ChatBubble({ message }) {
-  const { text, photoURL, uid } = message.data();
+  const { text, photoURL, uid, timestamp } = message.data();
 
   const sender = uid == auth.currentUser.uid ? true : false;
 
   return (
     <div
       className={
-        sender ? "p-3 flex flex-row-reverse gap-2" : "p-3 flex flex-row gap-2"
+        sender
+          ? "p-3 flex flex-row-reverse gap-2 items-center"
+          : "p-3 flex flex-row gap-2 items-center"
       }
     >
       <img src={photoURL} alt="" className="h-10 rounded-full" />
@@ -20,6 +23,11 @@ export default function ChatBubble({ message }) {
       >
         {text}
       </p>
+      <div className="flex flex-col justify-end items-end h-6">
+        <Moment fromNow className="text-[8px]">
+          {timestamp?.toDate()}
+        </Moment>
+      </div>
     </div>
   );
 }

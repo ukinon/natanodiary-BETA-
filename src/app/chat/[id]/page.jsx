@@ -7,7 +7,6 @@ export default function page() {
   return (
     <main className="flex min-h-screen max-w-7xl mx-auto ">
       <Sidebar page="message" />
-      <BottomNav page="message" />
       <MessageRoom />
       <Widget />
     </main>
