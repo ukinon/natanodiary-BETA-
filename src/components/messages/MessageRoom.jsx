@@ -183,7 +183,7 @@ export default function MessageRoom() {
       <div className="flex items-center bg-white sticky p-4 pb-8 bottom-0 mb-0 border-t-2">
         <form
           action=""
-          className="flex flex-row justify-between px-5 py-2 bg-gray-300 rounded-xl text-black w-full"
+          className="flex flex-row justify-between px-5 py-2 bg-gray-300 rounded-full sm:rounded-xl text-black w-full"
           onSubmit={sendMessage}
           ref={(el) => (formRef = el)}
         >
