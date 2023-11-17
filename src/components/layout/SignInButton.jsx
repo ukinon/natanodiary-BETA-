@@ -10,7 +10,7 @@ import { useRecoilState } from "recoil";
 import { redirect } from "next/navigation";
 export const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
-  signInWithRedirect(auth, provider);
+  signInWithPopup(auth, provider);
   redirect("/");
 };
 export default function SignInButton() {

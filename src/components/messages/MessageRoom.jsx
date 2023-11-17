@@ -4,11 +4,14 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { useParams, useRouter } from "next/navigation";
@@ -27,6 +30,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useRecoilState } from "recoil";
 import { loadingState } from "@/atom/loadingAtom";
+import TypingBubble from "./TypingBubble";
 
 export default function MessageRoom() {
   const params = useParams();
@@ -35,8 +39,8 @@ export default function MessageRoom() {
   const [formValue, setFormValue] = useState("");
   const [isLoading, setIsLoading] = useRecoilState(loadingState);
   const [messages, setMessages] = useState([]);
+  const [isTexting, setIsTexting] = useState([]);
   let formRef = useRef();
-  const dummy = useRef();
 
   useEffect(() => {
     if (session) {
@@ -50,6 +54,21 @@ export default function MessageRoom() {
     }
   }, [db, session]);
 
+  useEffect(() => {
+    if (session) {
+      const get = async () => {
+        const docRef = doc(db, "is_typing", session?.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setIsTexting(docSnap.data());
+        } else {
+          setIsTexting([]); // Set to null if the document doesn't exist
+        }
+      };
+      get();
+    }
+  }, [session, formValue]);
+
   async function sendMessage(e) {
     e.preventDefault();
     await addDoc(collection(db, "messages"), {
@@ -60,7 +79,18 @@ export default function MessageRoom() {
       timestamp: serverTimestamp(),
     });
     setFormValue("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+  }
+
+  async function isTyping(e) {
+    if (e != "") {
+      await setDoc(doc(db, "is_typing", auth.currentUser.uid), {
+        uid: auth.currentUser.uid,
+        photoURL: auth.currentUser.photoURL,
+      });
+    } else {
+      await deleteDoc(doc(db, "is_typing", auth.currentUser.uid));
+      setIsTexting([]);
+    }
   }
 
   const onEnterPress = (e) => {
@@ -68,6 +98,10 @@ export default function MessageRoom() {
       e.preventDefault();
       formRef.requestSubmit();
     }
+  };
+
+  const handleInputChange = (e) => {
+    setFormValue(e.target.value), isTyping(e.target.value);
   };
 
   return (
@@ -87,9 +121,17 @@ export default function MessageRoom() {
           messages.map((message) => (
             <>
               <ChatBubble message={message} key={message.id} />
-              <div ref={dummy}></div>
             </>
           ))}
+
+        {isTexting && session && (
+          <TypingBubble
+            uid={`${isTexting.uid}`}
+            photoURL={isTexting.photoURL}
+            key={isTexting.uid}
+          />
+        )}
+
         {isLoading && <p className="min-h-screen"> Loading ...</p>}
       </div>
       <div className="flex items-center bg-white sticky p-4 bottom-12 sm:bottom-0 border-t-2">
@@ -115,7 +157,7 @@ export default function MessageRoom() {
 
           <textarea
             value={formValue}
-            onChange={(e) => setFormValue(e.target.value)}
+            onChange={handleInputChange}
             className="w-[70%] bg-transparent border-none outline-none text-white placeholder:text-white resize-none h-7 pt-1"
             placeholder="Type Your Message Here"
             onKeyDown={onEnterPress}
