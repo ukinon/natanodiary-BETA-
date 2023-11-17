@@ -124,7 +124,7 @@ export default function MessageRoom() {
       <div className="flex py-2 px-3 sticky items-center border-b-2 border-gray-100 justify-between bg-white top-0 z-50">
         <div className="flex flex-row gap-2 items-center">
           <ArrowLeftIcon
-            className="h-10 hoverEffect"
+            className="h-7 hoverEffect"
             onClick={() => router.push("/")}
           />
           <h2 className="text-lg font-semibold cursor-pointer">Chat</h2>
