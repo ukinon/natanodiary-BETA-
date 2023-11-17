@@ -120,7 +120,7 @@ export default function MessageRoom() {
   };
 
   return (
-    <div className="xl:ml-[300px] mb-12 sm:mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
+    <div className="xl:ml-[300px] mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
       <div className="flex py-2 px-3 sticky items-center border-b-2 border-gray-100 justify-between bg-white top-0 z-50">
         <div className="flex flex-row gap-2 items-center">
           <ArrowLeftIcon
@@ -180,7 +180,7 @@ export default function MessageRoom() {
           <div className="fixed bottom-0" ref={dummy}></div>
         </AnimatePresence>
       </div>
-      <div className="flex items-center bg-white sticky p-4 bottom-0 border-t-2">
+      <div className="flex items-center bg-white sticky p-4 pb-8 bottom-0 mb-0 border-t-2">
         <form
           action=""
           className="flex flex-row justify-between px-5 py-2 bg-gray-300 rounded-xl text-black w-full"
