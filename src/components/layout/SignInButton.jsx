@@ -3,13 +3,13 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../../firebase";
 import { useRecoilState } from "recoil";
-
+import { redirect } from "next/navigation";
+export const signInWithGoogle = () => {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider);
+  redirect("/");
+};
 export default function SignInButton() {
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
-  };
-
   return (
     <>
       <button

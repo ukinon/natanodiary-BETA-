@@ -18,8 +18,8 @@ import {
 } from "@heroicons/react/24/solid";
 import SignInButton from "./SignInButton";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth } from "../../../firebase.js";
+import { redirect } from "next/navigation.js";
 
 export default function Sidebar({ page }) {
   const [session] = useAuthState(auth);
@@ -88,6 +88,7 @@ export default function Sidebar({ page }) {
             <img
               onClick={() => {
                 auth.signOut();
+                window.location = "/";
               }}
               className="h-10 xl:mr-2 rounded-full"
               src={session?.photoURL}

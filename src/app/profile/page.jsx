@@ -4,7 +4,6 @@ import BottomNav from "@/components/layout/BottomNav";
 import Sidebar from "@/components/layout/Sidebar";
 import Profile from "@/components/profile/Profile";
 import Widget from "@/components/widget/Widget";
-import { signIn, useSession } from "next-auth/react";
 
 export default function page() {
   return (

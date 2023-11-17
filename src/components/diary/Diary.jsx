@@ -1,29 +1,19 @@
 "use client";
 
-import { HeartIcon, SparklesIcon } from "@heroicons/react/20/solid";
+import { HeartIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRecoilState } from "recoil";
 import { searchState } from "@/atom/searchAtom";
-import Post from "../feeds/Post";
 import Stories from "../feeds/Stories";
-import { useRouter } from "next/navigation";
-import { useAuthState } from "react-firebase-hooks/auth";
+import Post from "../feeds/Post";
 
 export default function Diary() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useRecoilState(searchState);
-  const [session] = useAuthState(auth);
-  const router = useRouter();
 
-  if (
-    session?.uid != "0GKxYyf0pBSecoyngvhVJ3GJgCa2" &&
-    session?.uid != "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1"
-  ) {
-    router.push("/");
-  }
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(collection(db, "diary"), orderBy("timestamp", "desc")),
@@ -41,7 +31,7 @@ export default function Diary() {
   }, [search]);
 
   return (
-    <div className="xl:ml-[300px] mb-10 sm:mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
+    <div className="xl:ml-[300px] mb-12 sm:mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
       <div className="flex py-2 px-3 sticky z-20 items-center border-b-2 border-gray-100 justify-between bg-white top-0 ">
         <h2 className="text-lg font-semibold cursor-pointer">Diary</h2>
         <div className="hoverEffect py-0">

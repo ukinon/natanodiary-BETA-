@@ -1,7 +1,6 @@
 "use client";
 
 import { FaceSmileIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { useSession } from "next-auth/react";
 import { sendError } from "next/dist/server/api-utils";
 import React, { useRef, useState } from "react";
 import { auth, db, storage } from "../../../firebase";

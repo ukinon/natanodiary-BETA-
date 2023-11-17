@@ -1,7 +1,7 @@
 import React from "react";
 import { auth } from "../../../firebase";
 
-export default function ChatBubble({ key, message }) {
+export default function ChatBubble({ message }) {
   const { text, photoURL, uid } = message.data();
 
   const sender = uid == auth.currentUser.uid ? true : false;

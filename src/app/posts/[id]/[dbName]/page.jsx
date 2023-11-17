@@ -25,17 +25,17 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { db, storage } from "../../../../../firebase";
+import { auth, db, storage } from "../../../../../firebase";
 import Comment from "@/components/feeds/Comment";
-import { useSession } from "next-auth/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import BottomNav from "@/components/layout/BottomNav";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function PostPage() {
   const params = useParams();
   const router = useRouter();
 
-  const { data: session } = useSession();
+  const [session] = useAuthState(auth);
   const id = params.id;
   const dbName = params.dbName;
 
@@ -67,11 +67,11 @@ export default function PostPage() {
 
     const docRef = await addDoc(collection(db, dbName, id, "comments"), {
       comment: input,
-      name: session?.user.name,
-      username: session?.user.username,
-      userImg: session?.user.image,
+      name: session?.displayName,
+      email: session?.email,
+      userImg: session?.photoURL,
       timestamp: serverTimestamp(),
-      userId: session?.user.uid,
+      userId: session?.uid,
     });
     const imageRef = ref(storage, `stories/comments/${docRef.id}/image`);
     if (selectedFile) {
@@ -141,7 +141,7 @@ export default function PostPage() {
 
         <div className="flex p-2 mb-14 sm:mb-3 gap-2 border-b-2">
           <img
-            src={session?.user?.image}
+            src={session?.photoURL}
             alt="user"
             className="h-11 rounded-full"
           />

@@ -14,7 +14,6 @@ import {
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
-import { signIn } from "next-auth/react";
 import Moment from "react-moment";
 import { auth, db, storage } from "../../../firebase";
 import { useEffect, useState } from "react";
@@ -62,7 +61,7 @@ export default function Stories({ post, id, dbName }) {
         });
       }
     } else {
-      signIn();
+      signInWithGoogle;
     }
   }
 

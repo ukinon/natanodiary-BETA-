@@ -4,9 +4,6 @@ import CommentsModal from "@/components/feeds/CommentsModal";
 import Feed from "../components/feeds/Feed";
 import Sidebar from "../components/layout/Sidebar";
 import Widget from "../components/widget/Widget";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import BottomNav from "@/components/layout/BottomNav";
 
 export default function Home() {

@@ -8,7 +8,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Stories from "../feeds/Stories";
 import { AnimatePresence, motion } from "framer-motion";
@@ -62,6 +62,7 @@ export default function Profile() {
               className="rounded-full h-24 border-2 border-black"
               onClick={() => {
                 auth.signOut();
+                redirect("/");
               }}
             />
           </div>
