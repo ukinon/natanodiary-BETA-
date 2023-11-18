@@ -43,6 +43,7 @@ export default function MessageRoom() {
   const [isTexting, setIsTexting] = useState([]);
   let formRef = useRef();
   const dummy = useRef();
+  const chatDiv = useRef();
 
   useEffect(() => {
     if (session) {
@@ -72,10 +73,13 @@ export default function MessageRoom() {
 
   useEffect(() => {
     window.addEventListener("beforeunload", deleteTyping);
-    dummy.current.scrollIntoView({ behavior: "smooth" });
   }, [session]);
 
-  console.log(isTexting);
+  useEffect(() => {
+    window.addEventListener("DOMNodeInserted", () => {
+      dummy?.current.scrollIntoView({ behavior: "smooth" });
+    });
+  }, []);
 
   async function sendMessage(e) {
     e.preventDefault();
@@ -115,8 +119,15 @@ export default function MessageRoom() {
     }
   };
 
+  function resizeInput(el) {
+    el.style.height = "0px";
+    el.style.height = el.scrollHeight + "px";
+  }
+
   const handleInputChange = (e) => {
-    setFormValue(e.target.value), isTyping(e.target.value);
+    setFormValue(e.target.value),
+      isTyping(e.target.value),
+      resizeInput(e.target);
   };
 
   return (
@@ -130,7 +141,10 @@ export default function MessageRoom() {
           <h2 className="text-lg font-semibold cursor-pointer">Chat</h2>
         </div>
       </div>
-      <div className="min-h-[80%] xl:min-h-screen ">
+      <main
+        className="min-h-[80%] xl:min-h-screen overflow-y-scroll"
+        ref={chatDiv}
+      >
         <AnimatePresence>
           {!isLoading &&
             messages &&
@@ -177,13 +191,14 @@ export default function MessageRoom() {
               Loading ...
             </p>
           )}
-          <div className="fixed bottom-0" ref={dummy}></div>
+          <span ref={dummy}></span>
         </AnimatePresence>
-      </div>
-      <div className="flex items-center bg-white sticky p-4 pb-8 bottom-0 mb-0 border-t-2">
+      </main>
+
+      <div className="flex items-center bg-white sticky h-fit p-4 bottom-0 mb-0 border-t-2">
         <form
           action=""
-          className="flex flex-row justify-between px-5 py-2 bg-gray-300 rounded-full sm:rounded-xl text-black w-full"
+          className="flex flex-row items-center justify-between px-5 py-2 bg-gray-200 rounded-full sm:rounded-xl text-black w-full"
           onSubmit={sendMessage}
           ref={(el) => (formRef = el)}
         >
@@ -204,12 +219,16 @@ export default function MessageRoom() {
           <textarea
             value={formValue}
             onChange={handleInputChange}
-            className="w-[70%] bg-transparent border-none outline-none text-black placeholder:text-black resize-none h-7 pt-1"
-            placeholder="Type Your Message Here"
+            className="input w-[70%] max-h-16 lg:max-h-32 bg-transparent outline-none text-black placeholder:text-black placeholder:text-xs resize-none text-xs lg:text-sm lg:placeholder:text-sm border-none h-5"
             onKeyDown={onEnterPress}
+            placeholder="Type your message here"
           />
 
-          <button type="submit" className="bg-transparent text-white">
+          <button
+            type="submit"
+            className="bg-transparent text-white disabled:opacity-50"
+            disabled={!formValue.trim()}
+          >
             <ChevronRightIcon className="h-8 text-blue-500" />
           </button>
         </form>
