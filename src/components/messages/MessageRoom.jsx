@@ -76,10 +76,14 @@ export default function MessageRoom() {
   }, [session]);
 
   useEffect(() => {
-    window.addEventListener("DOMNodeInserted", () => {
-      dummy?.current.scrollIntoView({ behavior: "smooth" });
-    });
-  }, []);
+    if (session) {
+      if (dummy.current) {
+        window.addEventListener("DOMNodeInserted", () => {
+          dummy?.current.scrollIntoView({ behavior: "smooth" });
+        });
+      }
+    }
+  }, [session]);
 
   async function sendMessage(e) {
     e.preventDefault();
