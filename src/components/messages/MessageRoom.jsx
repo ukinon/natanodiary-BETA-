@@ -52,6 +52,7 @@ export default function MessageRoom() {
 
   useEffect(() => {
     if (session) {
+      setFormValue("");
       if (selectedChat != "hi") {
         setIsLoading(true);
         const unsubscribe = onSnapshot(
@@ -93,6 +94,11 @@ export default function MessageRoom() {
 
   useEffect(() => {
     window.addEventListener("beforeunload", deleteTyping);
+    window.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        deleteTyping();
+      }
+    });
   }, [session]);
 
   async function sendMessage(e) {
