@@ -25,64 +25,49 @@ export default function Sidebar({ page }) {
   const [session] = useAuthState(auth);
 
   return (
-    <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed xl:ml-8 ml-4">
-      <div className="hidden xl:flex font-semibold p-3 hoverEffect">
-        <p>Natano</p>
-        <p className="text-blue-700">Diary</p>
-      </div>
+    <div className="hidden sm:flex flex-col gap-3 sm:items-start fixed xl:ml-20 ml-4 h-screen justify-between">
+      <div className="">
+        <div className="flex font-semibold p-3 hoverEffect">
+          <p>N</p>
+          <p className="text-blue-700">D</p>
+        </div>
 
-      <div className="flex xl:hidden font-semibold p-3 hoverEffect">
-        <p>N</p>
-        <p className="text-blue-700">D</p>
-      </div>
-
-      <div className="mt-2 mb-2 xl:items-start">
-        <SidebarMenu
-          text="Home"
-          Icon={page == "home" ? HomeSolid : HomeIcon}
-          active={page == "home" ? true : false}
-          route="/"
-        />
-        {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
-          session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
+        <div className="mt-2 mb-2 xl:items-start">
           <SidebarMenu
-            text="Diary"
-            Icon={page == "diary" ? BookOpenSolid : BookOpenIcon}
-            active={page == "diary" ? true : false}
-            route="/diary"
+            Icon={page == "home" ? HomeSolid : HomeIcon}
+            active={page == "home" ? true : false}
+            route="/"
           />
-        )}
+          {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
+            session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
+            <SidebarMenu
+              Icon={page == "diary" ? BookOpenSolid : BookOpenIcon}
+              active={page == "diary" ? true : false}
+              route="/diary"
+            />
+          )}
 
-        <SidebarMenu
-          text="Notifications"
-          Icon={page == "notif" ? BellSolid : BellIcon}
-          active={page == "notif" ? true : false}
-          route={`/notifications/${session?.uid}`}
-        />
-
-        {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
-          session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
           <SidebarMenu
-            text="Messages"
+            Icon={page == "notif" ? BellSolid : BellIcon}
+            active={page == "notif" ? true : false}
+            route={`/notifications/${session?.uid}`}
+          />
+
+          <SidebarMenu
             Icon={page == "message" ? InboxSolid : InboxIcon}
             active={page == "message" ? true : false}
-            route={`/chat/${session?.uid}`}
+            route={`/messages`}
           />
-        )}
-        <SidebarMenu
-          text="Profile"
-          Icon={page == "profile" ? UserSolid : UserIcon}
-          route="/profile"
-          active={page == "profile" ? true : false}
-        />
-      </div>
-      <div className="flex justify-center">
-        <button className="p-3 bg-blue-500 rounded-full text-white w-56 h-12 font-bold shadow-md hover:brightness-75 text-lg hidden xl:inline">
-          Post
-        </button>
+
+          <SidebarMenu
+            Icon={page == "profile" ? UserSolid : UserIcon}
+            route="/profile"
+            active={page == "profile" ? true : false}
+          />
+        </div>
       </div>
 
-      <div className="hoverEffect text-gray-700 flex items-center space-x-3 justify-center mt-auto bottom-3 fixed bg-gray-100 overflow-hidden whitespace-nowrap">
+      <div className="hoverEffect flex items-center bg-gray-100">
         {auth.currentUser ? (
           <>
             <img
@@ -94,11 +79,6 @@ export default function Sidebar({ page }) {
               src={session?.photoURL}
               alt="user"
             />
-            <div className="leading-5 hidden xl:inline text-sm overflow-hidden max-w-[110px]">
-              <h4 className="font-bold text-sm">{session?.displayName}</h4>
-              <p className="text-xs">{session?.email}</p>
-            </div>
-            <EllipsisHorizontalIcon className="h-5 xl:ml-8 hidden xl:inline" />
           </>
         ) : (
           <SignInButton />

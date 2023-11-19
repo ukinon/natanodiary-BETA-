@@ -25,7 +25,6 @@ export default function BottomNav({ page }) {
       <SidebarMenu
         text="Home"
         Icon={page == "home" ? HomeSolid : HomeIcon}
-        active={page == "home" ? true : false}
         route="/"
       />
       {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
@@ -33,32 +32,26 @@ export default function BottomNav({ page }) {
         <SidebarMenu
           text="Diary"
           Icon={page == "diary" ? BookOpenSolid : BookOpenIcon}
-          active={page == "diary" ? true : false}
           route="/diary"
         />
       )}
       <SidebarMenu
         text="Notifications"
         Icon={page == "notif" ? BellSolid : BellIcon}
-        active={page == "notif" ? true : false}
         route={`/notifications/${session?.uid}`}
       />
 
-      {(session?.uid == "0GKxYyf0pBSecoyngvhVJ3GJgCa2" ||
-        session?.uid == "JAUrCBCpj6Vy4WWNCjGGZyTa3bm1") && (
-        <SidebarMenu
-          text="Messages"
-          Icon={page == "message" ? InboxSolid : InboxIcon}
-          active={page == "message" ? true : false}
-          route={`/chat/${session?.uid}`}
-        />
-      )}
+      <SidebarMenu
+        text="Messages"
+        Icon={page == "message" ? InboxSolid : InboxIcon}
+        route={`/messages`}
+      />
+
       {auth.currentUser ? (
         <SidebarMenu
           text="Profile"
           Icon={page == "profile" ? UserSolid : UserIcon}
           route="/profile"
-          active={page == "profile" ? true : false}
         />
       ) : (
         <SignInButton />

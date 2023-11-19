@@ -24,7 +24,6 @@ export default function SignInButton() {
           src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
           alt=""
         />
-        <h1 className="hidden xl:inline">Sign In with Google</h1>
       </button>
     </>
   );

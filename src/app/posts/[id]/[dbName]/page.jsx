@@ -127,7 +127,7 @@ export default function PostPage() {
     <main className="flex min-h-screen max-w-7xl mx-auto">
       <Sidebar page="home" />
       <BottomNav page="home" />
-      <div className="xl:ml-[300px] xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
+      <div className="xl:ml-[150px] xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
         <div className="flex py-2 px-3 sticky items-center border-b-2 justify-between bg-white top-0 z-50">
           <div className="flex flex-row gap-2 items-center">
             <ArrowLeftIcon
