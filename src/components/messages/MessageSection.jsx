@@ -34,8 +34,8 @@ export default function MessageSection() {
         query(collection(db, "chats")),
 
         (snapshot) => {
-          const extractedData = [];
           const result = snapshot.docs;
+          const extractedData = [];
           const filteredData = [];
 
           const resultFilter = result.map((doc) => {
@@ -65,8 +65,6 @@ export default function MessageSection() {
             return chat.uid !== session.uid;
           });
 
-          console.log(userChats);
-
           setChats(userChats);
         }
       );
@@ -95,8 +93,8 @@ export default function MessageSection() {
           ? session.uid + user.uid
           : user.uid + session?.uid;
 
-      await setUserChatState(user);
-      await setSelectedChat(combinedId);
+      setUserChatState(user);
+      setSelectedChat(combinedId);
 
       if (isMobile) {
         router.push("/chat");

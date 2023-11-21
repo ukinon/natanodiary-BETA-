@@ -139,7 +139,7 @@ export default function PostPage() {
         </div>
         <Stories id={id} post={post} dbName="stories" />
 
-        <div className="flex p-2 mb-14 sm:mb-3 gap-2 border-b-2">
+        <div className="flex p-2 sm:mb-3 gap-2 border-b-2">
           <img
             src={session?.photoURL}
             alt="user"
@@ -201,20 +201,19 @@ export default function PostPage() {
             )}
           </div>
         </div>
-
-        {comments.map((comment) => {
-          return (
-            <div className="" key={comment.id}>
-              {" "}
+        <div className="mb-16 sm:mb-0">
+          {comments.map((comment) => {
+            return (
               <Comment
                 commentId={comment.id}
                 comment={comment.data()}
                 originalPostId={id}
                 dbName={dbName}
+                key={comment.id}
               />
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
       <Widget />
       <CommentsModal dbName="diary" />

@@ -15,7 +15,11 @@ export default function ChatBubble({ message }) {
           : "p-3 flex flex-row gap-2 items-center"
       }
     >
-      <img src={photoURL} alt="" className="h-10 rounded-full" />
+      <img
+        src={photoURL}
+        alt=""
+        className={`${sender ? "hidden" : "inline"} rounded-full h-10`}
+      />
       <p
         className={`${
           sender ? "bg-blue-500 text-white" : "bg-slate-200 text-black"

@@ -89,7 +89,7 @@ export default function Comment({
   }
 
   return (
-    <div className="flex gap-2 mb-16 sm:mb-3 border-b-2 p-2 pl-5 whitespace-break-spaces cursor-pointer hover:brightness-90 ease-in-out transition-all">
+    <div className="flex gap-2 sm:mb-3 border-b-2 p-2 pl-5 whitespace-break-spaces cursor-pointer hover:brightness-90 ease-in-out transition-all">
       <img src={comment?.userImg} alt="user" className="h-10 rounded-full" />
       <div className="flex flex-col w-full">
         <div
