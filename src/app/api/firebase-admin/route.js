@@ -3,6 +3,8 @@ import { getAuth } from "firebase-admin/auth";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
+console.log("api running");
+
 export async function GET() {
   try {
     const listUsersResult = await getAuth().listUsers();
