@@ -66,8 +66,6 @@ export default function NotificationSection() {
     }
   }, [session]);
 
-  console.log(notifs);
-
   return (
     <div className="xl:ml-[150px] mb-12 sm:mb-0 xl:min-w-[650px] sm:ml-[73px] border border-l-2 border-r-2 border-gray-100 flex-grow max-w-xl">
       <div className="flex py-2 px-3 sticky items-center border-b-2 border-gray-100 justify-between bg-white top-0 z-50">
@@ -86,14 +84,14 @@ export default function NotificationSection() {
           return (
             <div
               className="flex flex-row gap-3 items-start justify-start border-b-2 mx-0 border-x-0 p-5"
-              key={notif}
+              key={notif.id}
             >
               <img
                 src={notif.data().userPicture}
                 className="rounded-full h-8 lg:h-12"
               />
               <div className="flex flex-col gap-3 w-2/3">
-                <p className="text-[10px] lg:text-xs ">
+                <p className="text-[12px] lg:text-xs ">
                   {notif.data().content}
                 </p>
                 <div
@@ -111,7 +109,7 @@ export default function NotificationSection() {
               </div>
               <Moment
                 fromNow
-                className="text-[7px] lg:text-[10px] text-gray-400"
+                className="text-[10px] lg:text-[13px] text-gray-400"
               >
                 {notif.data().timestamp.toDate()}
               </Moment>
