@@ -7,12 +7,16 @@ import {
 } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
   onSnapshot,
+  query,
+  serverTimestamp,
   setDoc,
+  where,
 } from "firebase/firestore";
 import Moment from "react-moment";
 import { auth, db, storage } from "../../../firebase";
@@ -22,6 +26,7 @@ import { useRecoilState } from "recoil";
 import { modalState, postIDState } from "@/atom/modalAtom";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { signInWithGoogle } from "../layout/SignInButton";
 
 export default function Stories({ post, id, dbName }) {
   const [session] = useAuthState(auth);
@@ -50,15 +55,66 @@ export default function Stories({ post, id, dbName }) {
     setHasLiked(likes.findIndex((like) => like.id === session?.uid) !== -1);
   }, [likes]);
 
+  async function sendNotif(content) {
+    const docRef = await addDoc(
+      collection(db, "notifications", post.data().userId, "notifications"),
+      {
+        userPicture: session?.photoURL,
+        user: session?.displayName,
+        userId: session?.uid,
+        content: content,
+        timestamp: serverTimestamp(),
+        text: post.data().text,
+        postId: id,
+        postUserImage: post?.data()?.userImg,
+        isRead: false,
+      }
+    );
+  }
+
+  async function deleteNotif() {
+    // Create a query with the specified condition
+    const q = query(
+      collection(db, "notifications", post.data().userId, "notifications"),
+      where("postId", "==", id),
+      where("userId", "==", session?.uid)
+    );
+
+    // Get the documents that match the condition
+    const querySnapshot = await getDocs(q);
+    console.log(querySnapshot);
+
+    // Iterate through the documents and delete each one
+    querySnapshot.forEach(async (document) => {
+      try {
+        // Delete the document
+        await deleteDoc(
+          doc(
+            db,
+            "notifications",
+            post.data().userId,
+            "notifications",
+            document.id
+          )
+        );
+        console.log("Document deleted successfully:", document.id);
+      } catch (error) {
+        console.error("Error deleting document:", error);
+      }
+    });
+  }
+
   async function likePost() {
     if (auth.currentUser) {
       const docRef = doc(db, dbName, id, "likes", session?.uid);
       if (hasLiked) {
         await deleteDoc(docRef);
+        deleteNotif();
       } else {
         await setDoc(docRef, {
           email: session.email,
         });
+        sendNotif(`${session?.displayName} liked your post`);
       }
     } else {
       signInWithGoogle;
@@ -68,8 +124,6 @@ export default function Stories({ post, id, dbName }) {
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       await deleteDoc(doc(db, dbName, id));
-
-      // Delete the subcollection "comments"
       const commentsCollectionRef = collection(db, dbName, id, "comments");
       const commentsQuerySnapshot = await getDocs(commentsCollectionRef);
       commentsQuerySnapshot.forEach(async (doc) => {

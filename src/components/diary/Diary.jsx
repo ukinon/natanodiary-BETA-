@@ -13,7 +13,7 @@ import Post from "../feeds/Post";
 export default function Diary() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useRecoilState(searchState);
-
+                    
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(collection(db, "diary"), orderBy("timestamp", "desc")),
