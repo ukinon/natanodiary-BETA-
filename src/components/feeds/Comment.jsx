@@ -97,10 +97,12 @@ export default function Comment({
           onClick={() => router.push(`/posts/${id}`)}
         >
           <div className="flex gap-2 items-center">
-            <h4 className="font-bold text-xs lg:text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
+            <h4 className="font-bold text-xs lg:text-sm max-w-[100px] lg:max-w-[180px] overflow-hidden whitespace-nowrap">
               {comment?.name}
             </h4>
-            <p className="text-[10px] lg:text-xs">@{comment?.username}</p>
+            <p className="text-[10px] max-w-[100px] overflow-hidden lg:max-w-none lg:text-xs">
+              @{comment?.email}
+            </p>
             <span className="text-[10px] lg:text-xs flex flex-row gap-1">
               -<Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
             </span>
