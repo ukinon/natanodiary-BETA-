@@ -162,10 +162,12 @@ export default function Stories({ post, id, dbName }) {
           onClick={() => router.push(`posts/${id}/${dbName}`)}
         >
           <div className="flex gap-2 items-center">
-            <h4 className="font-bold text-xs lg:text-sm max-w-[139px] overflow-hidden whitespace-nowrap">
+            <h4 className="font-bold text-xs lg:text-sm max-w-[100px] lg:max-w-[180px] overflow-hidden whitespace-nowrap">
               {post?.data()?.name}
             </h4>
-            <p className="text-[10px] lg:text-xs">@{post?.data()?.email}</p>
+            <p className="text-[10px] max-w-[100px] overflow-hidden lg:max-w-none lg:text-xs">
+              @{post?.data()?.email}
+            </p>
             <span className="text-[10px] lg:text-xs flex flex-row gap-1">
               -<Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
