@@ -114,7 +114,9 @@ export default function Stories({ post, id, dbName }) {
         await setDoc(docRef, {
           email: session.email,
         });
-        sendNotif(`${session?.displayName} liked your post`);
+        if (post.data().userId != session.uid) {
+          sendNotif(`${session?.displayName} liked your post`);
+        }
       }
     } else {
       signInWithGoogle;
