@@ -38,6 +38,7 @@ export default function Stories({ post, id, dbName }) {
 
   const router = useRouter();
 
+
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, dbName, id, "likes"),
